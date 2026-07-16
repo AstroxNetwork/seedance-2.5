@@ -327,10 +327,20 @@ p {
 }
 
 .language-chevron {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
   display: block;
-  font-size: 12px;
-  line-height: 1;
+  transform-origin: 50% 50%;
   transition: transform 180ms ease;
+}
+
+.language-chevron path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
 }
 
 .language-trigger[aria-expanded="true"] .language-chevron {
@@ -341,7 +351,7 @@ p {
   position: absolute;
   top: calc(100% + 12px);
   right: 0;
-  width: 154px;
+  width: 166px;
   padding: 6px;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.88);

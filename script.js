@@ -206,6 +206,95 @@ scheduleNavContrast();
 scheduleActiveNavLink();
 
 const translations = {
+  zhHant: {
+    skip: "跳至主要內容",
+    navCapabilities: "能力",
+    navWorkflow: "用法",
+    navIndustries: "行業",
+    navModels: "選型",
+    navTry: "前往嘗試",
+    heroSubtitle: "提前註冊帳號，上線優先體驗！",
+    factDuration: "單段直出",
+    factAssets: "個參考素材",
+    factLanguagesValue: "多語言",
+    factLanguages: "理解與表達",
+    explore: "查看詳情",
+    casePlay: "播放案例",
+    caseNarrative: "情緒房間 · 00:30",
+    feature1Title: "30 秒直出，<br />故事完整呈現。",
+    feature1Body: "單段最長 30 秒。人物、場景和鏡頭保持連貫，適合廣告片、短劇和品牌內容。",
+    feature1Point1: "單段最長 30 秒",
+    feature1Point2: "跨鏡人物與場景穩定",
+    feature1Point3: "支援高保真續寫",
+    caseReferences: "多模態參考",
+    feature2Title: "最多 50 個參考，<br />創作設定一次講清。",
+    feature2Body:
+      "圖片、影片、音訊和文字可同時參考。角色、產品、場景、動作和聲音，不用擠進一條提示詞。",
+    feature2Point1: "50 個多模態參考",
+    feature2Point2: "多角色、多場景協同",
+    feature2Point3: "主體與運動更穩定",
+    editSelected: "選取區域",
+    editCommand: "只換玻璃杯，保留人物動作和原片光線。",
+    caseEditing: "局部編輯",
+    feature3Title: "只改想改的，<br />不必推翻整條片。",
+    feature3Body: "局部替換物件、調整動作、修正細節，盡量保留原有構圖、節奏和質感。",
+    feature3Point1: "局部替換",
+    feature3Point2: "時序可控",
+    feature3Point3: "減少返工",
+    caseLanguage: "多語言創作",
+    feature4Title: "多語言創作，<br />創意不再需要翻譯一次。",
+    feature4Body: "用熟悉的語言描述鏡頭、表演和節奏，讓創作意圖更準確地抵達畫面。",
+    feature4Point1: "更強的多語言理解與表達",
+    feature4Point2: "複雜指令理解",
+    feature4Point3: "面向全球團隊",
+    capabilitiesDisclaimer: "以上能力以官方正式發布為準。",
+    workflowTitle: "從靈感到交付，四步完成",
+    step1Title: "寫下創意",
+    step1Body: "寫下故事、鏡頭和情緒。",
+    step2Title: "添加參考",
+    step2Body: "加入角色、產品、場景、動作和音訊。",
+    step3Title: "生成敘事",
+    step3Body: "選擇時長和畫幅，生成完整片段。",
+    step4Title: "準確精修",
+    step4Body: "局部修改畫面，直接用於交付。",
+    industriesTitle: "不只生成廣告，<br /><em>也生成產業資料。</em>",
+    industry1Tag: "製造業 / 零售業",
+    industry1Title: "產品影片說明書",
+    industry1Body: "把產品結構、操作與賣點，轉成清晰的影片內容。",
+    industry2Tag: "具身智慧",
+    industry2Title: "合成機器人訓練資料",
+    industry2Body: "補足稀缺的動作、場景和互動資料。",
+    industry3Tag: "自動駕駛",
+    industry3Title: "合成極端場景資料",
+    industry3Body: "生成難採集的天氣、道路和突發場景，補足長尾資料。",
+    modelsTitle: "不是每條影片，<br />都需要同一種解法。",
+    modelsIntro: "複雜創作優先品質與控制；規模生產優先成本與效率。",
+    model25Tag: "品質與控制優先",
+    modelMiniTag: "成本與規模優先",
+    modelFit: "適合",
+    model25Fit: "複雜敘事、TVC、短劇、品牌內容",
+    modelMiniFit: "電商內容、批量素材、快速測試",
+    modelNarrative: "敘事",
+    model25Narrative: "30 秒敘事，支援高保真續寫",
+    modelMiniNarrative: "高效生成短片段",
+    modelControl: "參考與編輯",
+    model25Control: "50 個多模態參考；局部編輯、複雜指令",
+    modelMiniControl: "輕量創作，適合高頻迭代",
+    modelPriority: "優先",
+    model25Priority: "品質、控制、完整敘事",
+    modelMiniPriority: "成本、速度、規模化",
+    closingTitle: "從創意，<br /><em>到成片。</em>",
+    notifyPrompt: "現在不想註冊？留下電子郵件，上線當天第一時間通知你。",
+    emailLabel: "電子郵件",
+    emailPlaceholder: "你的電子郵件",
+    notifySubmit: "上線時通知我",
+    notifyInvalid: "請輸入有效的電子郵件地址。",
+    notifySending: "正在提交…",
+    notifySuccess: "已登記，上線當天會第一時間通知你。",
+    notifyFallback: "正在開啟郵件應用程式，請發送已準備好的郵件完成登記。",
+    notifyError: "提交失敗，請重試或發送郵件至 cs@holycrab.ai。",
+    footerAttribution: "Seedance 是 ByteDance 旗下模型。HolyCrab 透過與 BytePlus 的直接協議提供存取服務。",
+  },
   en: {
     skip: "Skip to content",
     navCapabilities: "Capabilities",
@@ -408,6 +497,18 @@ const phaseCopy = {
       workflowCta: "预约 Seedance 2.5 优先体验",
       footerCta: "注册预约优先体验",
     },
+    zhHant: {
+      title: "Seedance 2.5 即將上線 — 提前註冊享優先體驗 | HolyCrab",
+      description:
+        "Seedance 2.5 即將上線（以官方發布為準）：30 秒長敘事、最多 50 個全模態參考、精準局部編輯。提前註冊，上線第一時間優先體驗。",
+      badge: "COMING SOON",
+      heroTitle: "Seedance 2.5<br />即將上線",
+      heroNotice: "",
+      navCta: "立即註冊",
+      heroCta: "立即註冊（領白名單）",
+      workflowCta: "預約 Seedance 2.5 優先體驗",
+      footerCta: "註冊預約優先體驗",
+    },
     en: {
       title: "Seedance 2.5 — Coming Soon | HolyCrab",
       description:
@@ -444,6 +545,17 @@ const phaseCopy = {
       workflowCta: "加入 Seedance 2.5 白名单",
       footerCta: "加入白名单",
     },
+    zhHant: {
+      title: "Seedance 2.5 即將上線 | HolyCrab",
+      description: "BytePlus 已正式公布 Seedance 2.5，HolyCrab 第一時間接入。加入白名單，優先體驗。",
+      badge: "正式公布 · 白名單限時開放",
+      heroTitle: "Seedance 2.5<br />即將上線",
+      heroNotice: "BytePlus 已正式公布，HolyCrab 第一時間接入",
+      navCta: "加入白名單",
+      heroCta: "加入白名單",
+      workflowCta: "加入 Seedance 2.5 白名單",
+      footerCta: "加入白名單",
+    },
     en: {
       title: "Seedance 2.5 Announced | HolyCrab",
       description: "Seedance 2.5 has been announced by BytePlus. Join the HolyCrab waitlist for priority access.",
@@ -473,6 +585,17 @@ const phaseCopy = {
       description: "Seedance 2.5 现已可用。立即注册 HolyCrab，开始生成。",
       badge: "NOW LIVE",
       heroTitle: "Seedance 2.5<br />现已可用",
+      heroNotice: "",
+      navCta: "立即生成",
+      heroCta: "立即生成",
+      workflowCta: "使用 Seedance 2.5 生成",
+      footerCta: "立即生成",
+    },
+    zhHant: {
+      title: "Seedance 2.5 現已可用 | HolyCrab",
+      description: "Seedance 2.5 現已可用。立即註冊 HolyCrab，開始生成。",
+      badge: "NOW LIVE",
+      heroTitle: "Seedance 2.5<br />現已可用",
       heroNotice: "",
       navCta: "立即生成",
       heroCta: "立即生成",
@@ -581,6 +704,7 @@ const waitlistMessages = {
     notifyFallback: "正在打开邮件应用，请发送已准备好的邮件完成登记。",
     notifyError: "提交失败，请重试或发送邮件至 cs@holycrab.ai。",
   },
+  zhHant: translations.zhHant,
   en: translations.en,
   ja: translations.ja,
 };
@@ -655,6 +779,17 @@ const mediaCopy = {
     caseReplay: "重播案例",
     unavailable: "前往原文",
   },
+  zhHant: {
+    pause: "暫停",
+    play: "播放",
+    sound: "開啟聲音",
+    mute: "關閉聲音",
+    original: "查看原片",
+    casePlay: "播放案例",
+    casePause: "暫停",
+    caseReplay: "重播案例",
+    unavailable: "前往原文",
+  },
   en: {
     pause: "Pause",
     play: "Play",
@@ -680,7 +815,7 @@ const mediaCopy = {
 };
 
 let currentLanguage = "zh";
-const languageLabels = { zh: "中", en: "EN", ja: "日" };
+const languageLabels = { zh: "简", zhHant: "繁", en: "EN", ja: "日" };
 
 let heroUsesPosterFallback = false;
 
@@ -884,7 +1019,7 @@ const applyLanguage = (language) => {
     }
   });
 
-  document.documentElement.lang = { zh: "zh-CN", en: "en", ja: "ja" }[language];
+  document.documentElement.lang = { zh: "zh-CN", zhHant: "zh-Hant", en: "en", ja: "ja" }[language];
   applyPhase(language);
 
   languageButtons.forEach((button) => {
@@ -925,7 +1060,7 @@ document.addEventListener("keydown", (event) => {
 let savedLanguage = "zh";
 try {
   const storedLanguage = window.localStorage.getItem("seedance-language");
-  if (["zh", "en", "ja"].includes(storedLanguage)) savedLanguage = storedLanguage;
+  if (["zh", "zhHant", "en", "ja"].includes(storedLanguage)) savedLanguage = storedLanguage;
 } catch {
   // Continue with Chinese when storage is unavailable.
 }
