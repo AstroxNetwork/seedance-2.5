@@ -1401,6 +1401,7 @@ h2 em {
   color: var(--coral-dark);
   background: var(--white);
   border: 1px solid var(--white);
+  border-radius: 999px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 800;
@@ -1441,7 +1442,7 @@ h2 em {
   gap: 30px;
   color: var(--ink);
   background: var(--white);
-  border-radius: 4px;
+  border-radius: 999px;
   font-size: 13px;
   font-weight: 800;
   transition: transform 180ms ease;
