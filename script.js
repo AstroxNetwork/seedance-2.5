@@ -4,8 +4,18 @@ const soundToggle = document.querySelector("#sound-toggle");
 const PHASE = ["A", "B", "C"].includes(window.SEEDANCE_PHASE) ? window.SEEDANCE_PHASE : "A";
 const WAITLIST_ENDPOINT = window.SEEDANCE_WAITLIST_ENDPOINT?.trim() || "";
 const PLAUSIBLE_SITE_ID = window.SEEDANCE_PLAUSIBLE_SITE_ID?.trim() || "";
+const GA_ID = window.SEEDANCE_GA_ID?.trim() || "";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const sourceDocument = "https://bytedance.sg.larkoffice.com/docx/VKQ1d57DMoEMKhxU1IrlG8GUgAI";
+// Public fallback shown when a case video can't play. Must NOT be an internal doc.
+const sourceDocument = "https://holycrab.ai/seedance-2-5/";
+// Inbound UTM/referral params on the landing URL — preserved and forwarded to CTA
+// destinations so email→landing→register attribution survives the hop.
+const INBOUND_PARAMS = new URLSearchParams(window.location.search);
+const INBOUND_UTM = Object.fromEntries(
+  ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
+    .map((k) => [k, INBOUND_PARAMS.get(k)])
+    .filter(([, v]) => v),
+);
 const languageButtons = Array.from(document.querySelectorAll("[data-lang]"));
 const languageMenu = document.querySelector(".language-menu");
 const languageTrigger = document.querySelector("#language-trigger");
@@ -535,10 +545,16 @@ const applyPhase = (language) => {
 
   ctaLinks.forEach((link) => {
     const url = new URL(link.href);
-    url.searchParams.set("utm_source", "sd25lp");
-    url.searchParams.set("utm_medium", "landing");
-    url.searchParams.set("utm_campaign", phaseCampaigns[PHASE]);
+    // Forward the inbound campaign attribution (from the email link) if present;
+    // otherwise default to landing-page self-attribution. This keeps the whole
+    // email → landing → register chain attributable to the same campaign.
+    url.searchParams.set("utm_source", INBOUND_UTM.utm_source || "sd25lp");
+    url.searchParams.set("utm_medium", INBOUND_UTM.utm_medium || "landing");
+    url.searchParams.set("utm_campaign", INBOUND_UTM.utm_campaign || phaseCampaigns[PHASE]);
+    // utm_content stays specific to which button was clicked; keep the inbound
+    // email block (if any) as utm_term so both are preserved.
     url.searchParams.set("utm_content", link.dataset.ctaPosition);
+    if (INBOUND_UTM.utm_content) url.searchParams.set("utm_term", INBOUND_UTM.utm_content);
     link.href = url.toString();
   });
 };
@@ -556,9 +572,26 @@ if (PLAUSIBLE_SITE_ID) {
   document.head.append(plausibleScript);
 }
 
+if (GA_ID) {
+  window.dataLayer = window.dataLayer || [];
+  window.gtag =
+    window.gtag ||
+    function gtag() {
+      window.dataLayer.push(arguments);
+    };
+  window.gtag("js", new Date());
+  window.gtag("config", GA_ID);
+
+  const gaScript = document.createElement("script");
+  gaScript.async = true;
+  gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_ID)}`;
+  document.head.append(gaScript);
+}
+
 const trackEvent = (name, properties = {}) => {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({ event: name, ...properties });
+  window.gtag?.("event", name, properties);
   window.plausible?.(name, { props: properties });
   window.dispatchEvent(new CustomEvent("holycrab:analytics", { detail: { name, properties } }));
 };
@@ -607,13 +640,20 @@ waitlistForm?.addEventListener("submit", async (event) => {
     phase: PHASE,
     language: currentLanguage,
     source: "sd25lp",
+    utm: INBOUND_UTM,
     submitted_at: new Date().toISOString(),
   };
 
   if (!WAITLIST_ENDPOINT) {
-    const subject = encodeURIComponent("Seedance 2.5 上线通知登记");
+    // Last-resort only (endpoint should always be configured). Localized subject/body.
+    const mailtoSubject = {
+      zh: "Seedance 2.5 上线通知登记",
+      en: "Seedance 2.5 launch notification signup",
+      ja: "Seedance 2.5 公開通知の登録",
+    };
+    const subject = encodeURIComponent(mailtoSubject[currentLanguage] || mailtoSubject.en);
     const body = encodeURIComponent(
-      `邮箱：${email}\n页面语言：${currentLanguage}\n提交时间：${payload.submitted_at}`,
+      `email: ${email}\nlanguage: ${currentLanguage}\nsubmitted_at: ${payload.submitted_at}`,
     );
     setWaitlistStatus(messages.notifyFallback);
     window.location.href = `mailto:cs@holycrab.ai?subject=${subject}&body=${body}`;
