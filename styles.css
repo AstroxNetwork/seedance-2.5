@@ -684,6 +684,27 @@ p {
   transform: translateY(clamp(14px, 1.6vw, 24px));
 }
 
+.release-facts .stat-text.is-language-word {
+  font-size: clamp(14px, 4.4vw, 64px);
+  white-space: nowrap;
+}
+
+.release-facts .stat-text.is-flashing {
+  animation: stat-language-flash 140ms ease-out both;
+}
+
+@keyframes stat-language-flash {
+  from {
+    opacity: 0.2;
+    filter: blur(3px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
 .release-facts span.is-counting .stat-count {
   animation: stat-count-pop 780ms cubic-bezier(0.16, 0.86, 0.24, 1.22) both;
 }
@@ -1666,6 +1687,10 @@ h2 em {
     font-size: clamp(22px, 7vw, 28px);
     line-height: 1.1;
     transform: translateY(8px);
+  }
+
+  .release-facts .stat-text.is-language-word {
+    font-size: clamp(14px, 4.4vw, 22px);
   }
 
   .release-facts small {

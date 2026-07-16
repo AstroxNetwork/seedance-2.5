@@ -1008,8 +1008,54 @@ if ("IntersectionObserver" in window) {
 
 const statCounts = Array.from(document.querySelectorAll("[data-stat-count]"));
 const releaseFacts = document.querySelector(".release-facts");
+const languageStat = document.querySelector(".stat-text[data-i18n='factLanguagesValue']");
+const languageStatSequence = ["中文", "日本語", "English", "한국어", "Español", "Français", "Deutsch", "Português", "العربية", "हिन्दी"];
+let languageStatTimers = [];
+
 const setStatCount = (element, value) => {
   element.textContent = `${value}${element.dataset.statSuffix ?? ""}`;
+};
+
+const getLanguageStatFinalValue = () =>
+  currentLanguage === "zh"
+    ? originalContent.get(languageStat)
+    : translations[currentLanguage]?.factLanguagesValue || originalContent.get(languageStat);
+
+const clearLanguageStatAnimation = () => {
+  languageStatTimers.forEach((timer) => window.clearTimeout(timer));
+  languageStatTimers = [];
+  languageStat?.classList.remove("is-flashing", "is-language-word");
+  languageStat?.parentElement?.classList.remove("is-language-cycling");
+  if (languageStat) languageStat.textContent = getLanguageStatFinalValue();
+};
+
+const animateLanguageStat = (cycle) => {
+  if (!languageStat) return;
+
+  clearLanguageStatAnimation();
+  languageStat.parentElement?.classList.add("is-language-cycling");
+
+  const setLanguageStatValue = (value, isFinal = false) => {
+    if (cycle !== statAnimationCycle) return;
+
+    languageStat.textContent = value;
+    languageStat.classList.toggle("is-language-word", !isFinal);
+    languageStat.classList.remove("is-flashing");
+    void languageStat.offsetWidth;
+    languageStat.classList.add("is-flashing");
+  };
+
+  languageStatSequence.forEach((language, index) => {
+    const timer = window.setTimeout(() => setLanguageStatValue(language), index * 105);
+    languageStatTimers.push(timer);
+  });
+
+  const finalTimer = window.setTimeout(() => {
+    setLanguageStatValue(getLanguageStatFinalValue(), true);
+    languageStat.parentElement?.classList.remove("is-language-cycling");
+    languageStatTimers = [];
+  }, languageStatSequence.length * 105);
+  languageStatTimers.push(finalTimer);
 };
 
 let statAnimationCycle = 0;
@@ -1051,10 +1097,12 @@ const startStatCounts = () => {
   const cycle = ++statAnimationCycle;
   statCounts.forEach((element) => setStatCount(element, 0));
   statCounts.forEach((element, index) => animateStatCount(element, index * 120, cycle));
+  animateLanguageStat(cycle);
 };
 
 const resetStatCounts = () => {
   ++statAnimationCycle;
+  clearLanguageStatAnimation();
   statCounts.forEach((element) => {
     element.parentElement?.classList.remove("is-counting");
     setStatCount(element, 0);
@@ -1063,6 +1111,7 @@ const resetStatCounts = () => {
 
 if (reduceMotion || !("IntersectionObserver" in window) || !releaseFacts) {
   statCounts.forEach((element) => setStatCount(element, Number(element.dataset.statCount)));
+  clearLanguageStatAnimation();
 } else {
   const statObserver = new IntersectionObserver(
     ([entry]) => {
