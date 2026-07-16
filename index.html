@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="zh-CN" data-phase="A">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="phase-config.js"></script>
+    <script>
+      document.documentElement.dataset.phase = window.SEEDANCE_PHASE || "A";
+    </script>
+    <meta name="robots" content="noindex" />
+    <meta
+      name="description"
+      content="Seedance 2.5 即将上线（以官方发布为准）：30 秒长叙事、最多 50 个全模态参考、精准局部编辑。提前注册，上线第一时间优先体验。"
+    />
+    <link rel="canonical" href="https://seedance-2-5-8o3.pages.dev/" />
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <title>Seedance 2.5 即将上线 — 提前注册领优先体验 | HolyCrab</title>
+    <link rel="stylesheet" href="styles.css?v=20260716-phase-a-5" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
+
+    <svg class="nav-glass-defs" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="nav-glass-refraction" color-interpolation-filters="sRGB" x="-8%" y="-25%" width="116%" height="150%">
+          <feImage id="nav-glass-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="nav-map" />
+          <feDisplacementMap id="nav-red-displacement" in="SourceGraphic" in2="nav-map" xChannelSelector="R" yChannelSelector="G" result="nav-red-displaced" />
+          <feColorMatrix
+            in="nav-red-displaced"
+            type="matrix"
+            values="1 0 0 0 0
+                    0 0 0 0 0
+                    0 0 0 0 0
+                    0 0 0 1 0"
+            result="nav-red"
+          />
+          <feDisplacementMap id="nav-green-displacement" in="SourceGraphic" in2="nav-map" xChannelSelector="R" yChannelSelector="G" result="nav-green-displaced" />
+          <feColorMatrix
+            in="nav-green-displaced"
+            type="matrix"
+            values="0 0 0 0 0
+                    0 1 0 0 0
+                    0 0 0 0 0
+                    0 0 0 1 0"
+            result="nav-green"
+          />
+          <feDisplacementMap id="nav-blue-displacement" in="SourceGraphic" in2="nav-map" xChannelSelector="R" yChannelSelector="G" result="nav-blue-displaced" />
+          <feColorMatrix
+            in="nav-blue-displaced"
+            type="matrix"
+            values="0 0 0 0 0
+                    0 0 0 0 0
+                    0 0 1 0 0
+                    0 0 0 1 0"
+            result="nav-blue"
+          />
+          <feBlend in="nav-red" in2="nav-green" mode="screen" result="nav-rg" />
+          <feBlend in="nav-rg" in2="nav-blue" mode="screen" result="nav-output" />
+          <feGaussianBlur id="nav-glass-blur" in="nav-output" />
+        </filter>
+      </defs>
+    </svg>
+
+    <header class="site-nav" aria-label="主导航">
+      <a class="nav-logo" href="#top" aria-label="Holycrab 首页">
+        <img src="assets/logo.svg" alt="Holycrab" />
+      </a>
+      <nav class="nav-links" aria-label="页面目录">
+        <a href="#capabilities" data-i18n="navCapabilities">能力</a>
+        <a href="#workflow" data-i18n="navWorkflow">用法</a>
+        <a href="#industries" data-i18n="navIndustries">行业</a>
+        <a href="#models" data-i18n="navModels">选型</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="language-menu">
+          <button
+            class="language-trigger"
+            id="language-trigger"
+            type="button"
+            aria-label="选择语言"
+            aria-expanded="false"
+            aria-controls="language-options"
+          >
+            <span class="current-language">中</span>
+            <span class="language-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div class="language-options" id="language-options" role="menu" hidden>
+            <button type="button" role="menuitemradio" data-lang="zh" aria-checked="true">
+              <span>中</span><strong>中文</strong>
+            </button>
+            <button type="button" role="menuitemradio" data-lang="en" aria-checked="false">
+              <span>EN</span><strong>English</strong>
+            </button>
+            <button type="button" role="menuitemradio" data-lang="ja" aria-checked="false">
+              <span>日</span><strong>日本語</strong>
+            </button>
+          </div>
+        </div>
+        <a
+          class="nav-cta"
+          href="https://generate.holycrab.ai/register?utm_source=sd25lp&amp;utm_medium=landing&amp;utm_campaign=sd25_preheat&amp;utm_content=nav"
+          target="_blank"
+          rel="noreferrer"
+          data-cta-position="nav"
+          data-phase-copy="navCta"
+        >立即注册</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <video
+          class="hero-video"
+          id="reboot-video"
+          poster="assets/reboot-poster.png"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          aria-label="Seedance 2.5 创意短片"
+        >
+          <source src="assets/reboot.mp4" type="video/mp4" />
+        </video>
+        <div class="hero-scrim" aria-hidden="true"></div>
+
+        <div class="hero-content page-shell">
+          <span class="phase-badge reveal" data-phase-copy="badge">COMING SOON</span>
+          <h1 id="hero-title" class="reveal" data-phase-copy="heroTitle">Seedance 2.5<br />即将上线</h1>
+          <p class="hero-phase-note reveal" data-phase-copy="heroNotice"></p>
+          <p class="hero-subtitle reveal" data-i18n="heroSubtitle">提前注册账号，上线优先体验！</p>
+          <div class="hero-actions reveal">
+            <a
+              class="hero-register"
+              href="https://generate.holycrab.ai/register?utm_source=sd25lp&amp;utm_medium=landing&amp;utm_campaign=sd25_preheat&amp;utm_content=hero"
+              target="_blank"
+              rel="noreferrer"
+              data-cta-position="hero"
+              data-phase-copy="heroCta"
+            >立即注册（领白名单）</a>
+          </div>
+        </div>
+        <button class="media-button icon-only hero-sound-toggle" id="sound-toggle" type="button" aria-label="打开背景视频声音" aria-pressed="false">
+          <span class="media-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+              <path d="m16 9 5 5" />
+              <path d="m21 9-5 5" />
+            </svg>
+          </span>
+        </button>
+        <a class="hero-scroll-cue" href="#capabilities" aria-label="向下滑动">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 9l6 6 6-6" />
+            <path d="M6 4l6 6 6-6" />
+          </svg>
+        </a>
+
+      </section>
+
+      <section class="release-stats page-shell" aria-label="Seedance 2.5 核心升级数据">
+        <div class="release-facts">
+          <span class="reveal"><strong class="stat-count" data-stat-count="30" data-stat-suffix="s">30s</strong><small data-i18n="factDuration">单段直出</small></span>
+          <span class="reveal"><strong class="stat-count" data-stat-count="50">50</strong><small data-i18n="factAssets">个参考素材</small></span>
+          <span class="reveal"><strong class="stat-text" data-i18n="factLanguagesValue">多语言</strong><small data-i18n="factLanguages">理解与表达</small></span>
+        </div>
+      </section>
+
+      <section class="capabilities" id="capabilities" aria-label="Seedance 2.5 四项核心能力">
+        <article class="feature feature-light" id="narrative">
+          <div class="feature-media reveal">
+            <video
+              autoplay
+              muted
+              loop
+              playsinline
+              poster="assets/cases/narrative-30s.png"
+              preload="metadata"
+              disablepictureinpicture
+              aria-label="30 秒叙事案例《情绪房间》"
+            >
+              <source src="assets/capabilities/narrative-30s.mp4" type="video/mp4" />
+            </video>
+            <span class="media-caption" data-i18n="caseNarrative">情绪房间 · 00:30</span>
+          </div>
+          <div class="feature-copy">
+            <h3 class="reveal" data-i18n-html="feature1Title">30 秒直出，<br />故事完整呈现。</h3>
+            <p class="reveal capability-body" data-i18n="feature1Body">
+              单段最长 30 秒。人物、场景和镜头保持连贯，适合广告片、短剧和品牌内容。
+            </p>
+            <ul class="feature-points reveal capability-tags">
+              <li data-i18n="feature1Point1">单段最长 30 秒</li>
+              <li data-i18n="feature1Point2">跨镜人物与场景稳定</li>
+              <li data-i18n="feature1Point3">支持高保真续写</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="feature feature-dark feature-reverse" id="references">
+          <div class="feature-media reveal">
+            <video autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="50 个参考素材案例">
+              <source src="assets/capabilities/references-50.mp4" type="video/mp4" />
+            </video>
+            <span class="media-caption" data-i18n="caseReferences">多模态参考</span>
+            <div class="asset-counter" aria-hidden="true"><span>12</span><span>24</span><span>38</span><strong>50</strong></div>
+          </div>
+          <div class="feature-copy">
+            <h3 class="reveal" data-i18n-html="feature2Title">最多 50 个参考，<br />创作设定一次讲清。</h3>
+            <p class="reveal capability-body" data-i18n="feature2Body">
+              图片、视频、音频和文本可同时参考。角色、产品、场景、动作和声音，不用挤进一条提示词。
+            </p>
+            <ul class="feature-points reveal capability-tags">
+              <li data-i18n="feature2Point1">50 个多模态参考</li>
+              <li data-i18n="feature2Point2">多角色、多场景协同</li>
+              <li data-i18n="feature2Point3">主体与运动更稳定</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="feature feature-coral" id="editing">
+          <div class="feature-media edit-demo reveal" aria-label="视频局部编辑示意">
+            <video autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="准确视频编辑案例">
+              <source src="assets/capabilities/precision-edit.mp4" type="video/mp4" />
+            </video>
+            <div class="edit-focus" aria-hidden="true"><span data-i18n="editSelected">选中区域</span></div>
+            <div class="edit-command" data-i18n="editCommand">只换玻璃杯，保留人物动作和原片光线。</div>
+            <span class="media-caption" data-i18n="caseEditing">局部编辑</span>
+          </div>
+          <div class="feature-copy">
+            <h3 class="reveal" data-i18n-html="feature3Title">只改想改的，<br />不必推翻整条片。</h3>
+            <p class="reveal capability-body" data-i18n="feature3Body">
+              局部替换对象、调整动作、修正细节，尽量保留原有构图、节奏和质感。
+            </p>
+            <ul class="feature-points reveal capability-tags">
+              <li data-i18n="feature3Point1">局部替换</li>
+              <li data-i18n="feature3Point2">时序可控</li>
+              <li data-i18n="feature3Point3">减少返工</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="feature feature-ivory feature-reverse" id="language">
+          <div class="feature-media language-demo reveal">
+            <video autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="多语言创作案例">
+              <source src="assets/capabilities/languages-10plus.mp4" type="video/mp4" />
+            </video>
+            <span class="media-caption" data-i18n="caseLanguage">多语言创作</span>
+          </div>
+          <div class="feature-copy">
+            <h3 class="reveal" data-i18n-html="feature4Title">多语言创作，<br />创意不再需要翻译一次。</h3>
+            <p class="reveal capability-body" data-i18n="feature4Body">
+              用熟悉的语言描述镜头、表演和节奏，让创作意图更准确地抵达画面。
+            </p>
+            <ul class="feature-points reveal capability-tags">
+              <li data-i18n="feature4Point1">更强的多语言理解与表达</li>
+              <li data-i18n="feature4Point2">复杂指令理解</li>
+              <li data-i18n="feature4Point3">面向全球团队</li>
+            </ul>
+          </div>
+        </article>
+      </section>
+
+      <section class="workflow" id="workflow" aria-labelledby="workflow-title">
+        <div class="page-shell">
+          <div class="workflow-heading reveal">
+            <h2 id="workflow-title" data-i18n="workflowTitle">从灵感到交付，四步完成</h2>
+          </div>
+          <div class="workflow-content">
+            <div class="workflow-media-column reveal">
+              <div class="workflow-video">
+                <video autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="制造业与零售业产品视频说明书案例">
+                  <source src="assets/industries/manufacturing.m4v" type="video/mp4" />
+                </video>
+              </div>
+              <a
+                class="workflow-experience"
+                href="https://generate.holycrab.ai/register?utm_source=sd25lp&amp;utm_medium=landing&amp;utm_campaign=sd25_preheat&amp;utm_content=workflow"
+                target="_blank"
+                rel="noreferrer"
+                data-cta-position="workflow"
+                data-phase-copy="workflowCta"
+              >预约 Seedance 2.5 优先体验</a>
+            </div>
+            <ol class="workflow-steps">
+              <li class="reveal">
+                <span>01</span>
+                <h3 data-i18n="step1Title">写下创意</h3>
+                <p data-i18n="step1Body">写下故事、镜头和情绪。</p>
+              </li>
+              <li class="reveal">
+                <span>02</span>
+                <h3 data-i18n="step2Title">添加参考</h3>
+                <p data-i18n="step2Body">加入角色、产品、场景、动作和音频。</p>
+              </li>
+              <li class="reveal">
+                <span>03</span>
+                <h3 data-i18n="step3Title">生成叙事</h3>
+                <p data-i18n="step3Body">选择时长和画幅，生成完整片段。</p>
+              </li>
+              <li class="reveal">
+                <span>04</span>
+                <h3 data-i18n="step4Title">准确精修</h3>
+                <p data-i18n="step4Body">局部修改画面，直接用于交付。</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="industries" id="industries" aria-labelledby="industries-title">
+        <div class="page-shell industries-heading">
+          <h2 id="industries-title" class="reveal" data-i18n-html="industriesTitle">不止生成广告，<br /><em>也生成产业数据。</em></h2>
+        </div>
+        <div class="industry-list page-shell">
+          <article class="industry-item reveal">
+            <div class="industry-video">
+              <video autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="制造业与零售业产品视频说明书案例">
+                <source
+                  src="assets/industries/manufacturing.m4v"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+            <div class="industry-copy">
+              <div class="industry-meta">
+                <p data-i18n="industry1Tag">制造业 / 零售业</p>
+              </div>
+              <h3 data-i18n="industry1Title">产品视频说明书</h3>
+              <p data-i18n="industry1Body">把产品结构、操作与卖点，转成清晰的视频内容。</p>
+            </div>
+          </article>
+          <article class="industry-item reveal">
+            <div class="industry-video">
+              <video autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="具身智能机器人训练数据案例">
+                <source
+                  src="assets/industries/robot.mp4"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+            <div class="industry-copy">
+              <div class="industry-meta">
+                <p data-i18n="industry2Tag">具身智能</p>
+              </div>
+              <h3 data-i18n="industry2Title">合成机器人训练数据</h3>
+              <p data-i18n="industry2Body">补足稀缺的动作、场景和交互数据。</p>
+            </div>
+          </article>
+          <article class="industry-item reveal">
+            <div class="industry-video">
+              <video autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="自动驾驶极端场景数据案例">
+                <source
+                  src="assets/industries/autonomous.m4v"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+            <div class="industry-copy">
+              <div class="industry-meta">
+                <p data-i18n="industry3Tag">自动驾驶</p>
+              </div>
+              <h3 data-i18n="industry3Title">合成极端场景数据</h3>
+              <p data-i18n="industry3Body">生成难采集的天气、道路和突发场景，补足长尾数据。</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="models" id="models" aria-label="Seedance 模型对比">
+        <div class="page-shell">
+          <div class="model-matrix reveal" aria-label="Seedance 2.5 与 Seedance 2.0 Mini Fast 对比">
+            <div class="model-matrix-header">
+              <div class="model-matrix-corner" aria-hidden="true"></div>
+              <div class="model-matrix-product model-matrix-product-25">
+                <h2>Seedance 2.5</h2>
+              </div>
+              <div class="model-matrix-product model-matrix-product-mini">
+                <h2>Seedance 2.0 Mini / Fast</h2>
+              </div>
+            </div>
+            <dl class="model-matrix-rows">
+              <div class="model-matrix-row">
+                <dt data-i18n="modelFit">适合</dt>
+                <dd class="model-value model-value-25" data-i18n="model25Fit">复杂叙事、TVC、短剧、品牌内容</dd>
+                <dd class="model-value model-value-mini" data-i18n="modelMiniFit">电商内容、批量素材、快速测试</dd>
+              </div>
+              <div class="model-matrix-row">
+                <dt data-i18n="modelNarrative">叙事</dt>
+                <dd class="model-value model-value-25" data-i18n="model25Narrative">30 秒叙事，支持高保真续写</dd>
+                <dd class="model-value model-value-mini" data-i18n="modelMiniNarrative">高效生成短片段</dd>
+              </div>
+              <div class="model-matrix-row">
+                <dt data-i18n="modelControl">参考与编辑</dt>
+                <dd class="model-value model-value-25" data-i18n="model25Control">50 个多模态参考；局部编辑、复杂指令</dd>
+                <dd class="model-value model-value-mini" data-i18n="modelMiniControl">轻量创作，适合高频迭代</dd>
+              </div>
+              <div class="model-matrix-row">
+                <dt data-i18n="modelPriority">优先</dt>
+                <dd class="model-value model-value-25" data-i18n="model25Priority">质量、控制、完整叙事</dd>
+                <dd class="model-value model-value-mini" data-i18n="modelMiniPriority">成本、速度、规模化</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing" aria-labelledby="closing-title">
+        <div class="page-shell closing-inner">
+          <h2 id="closing-title" class="reveal" data-i18n-html="closingTitle">从创意，<br /><em>到成片。</em></h2>
+          <div class="closing-actions reveal">
+            <a
+              class="primary-button"
+              href="https://generate.holycrab.ai/register?utm_source=sd25lp&amp;utm_medium=landing&amp;utm_campaign=sd25_preheat&amp;utm_content=footer"
+              target="_blank"
+              rel="noreferrer"
+              data-cta-position="footer"
+            ><span data-phase-copy="footerCta">注册预约优先体验</span> <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="waitlist-notify reveal" id="notify">
+            <p data-i18n="notifyPrompt">不想现在注册？留下邮箱，上线当天第一时间通知你。</p>
+            <form class="waitlist-form" id="waitlist-form" novalidate>
+              <label class="sr-only" for="waitlist-email" data-i18n="emailLabel">邮箱</label>
+              <input
+                id="waitlist-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                inputmode="email"
+                required
+                data-i18n-placeholder="emailPlaceholder"
+                placeholder="你的邮箱"
+              />
+              <button type="submit" data-i18n="notifySubmit">上线时通知我</button>
+            </form>
+            <p class="waitlist-status" id="waitlist-status" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner page-shell">
+        <div class="footer-brand">
+          <a href="#top" aria-label="HolyCrab 首页">HolyCrab</a>
+          <p>© 2026 HolyCrab. All rights reserved.<br />Powered by HolyCrab AI</p>
+          <p class="footer-attribution" data-i18n="footerAttribution">Seedance 是 ByteDance 旗下模型。HolyCrab 通过与 BytePlus 的直接协议提供接入服务。</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-contact">
+            <span>CONTACT US</span>
+            <a href="mailto:cs@holycrab.ai">cs@holycrab.ai</a>
+          </div>
+          <div class="footer-divider" aria-hidden="true"></div>
+          <nav class="footer-legal" aria-label="法律信息">
+            <a href="https://sd2.holycrab.ai/privacy/" target="_blank" rel="noreferrer">Privacy Policy</a>
+            <a href="https://sd2.holycrab.ai/terms/" target="_blank" rel="noreferrer">Terms of Service</a>
+          </nav>
+        </div>
+      </div>
+      <p class="capabilities-disclaimer page-shell" data-i18n="capabilitiesDisclaimer">以上能力以官方正式发布为准。</p>
+    </footer>
+
+  <script src="script.js?v=20260716-phase-a"></script>
+  </body>
+</html>
