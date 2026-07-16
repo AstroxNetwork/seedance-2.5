@@ -1025,7 +1025,7 @@ h2 em {
 .workflow-experience {
   width: fit-content;
   min-height: 46px;
-  margin-top: 12px;
+  margin-top: 32px;
   padding: 0 20px;
   display: inline-flex;
   align-items: center;
@@ -1034,12 +1034,15 @@ h2 em {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.92);
   border-radius: 999px;
+  opacity: 0.5;
   font-size: 13px;
   font-weight: 800;
-  transition: transform 180ms ease, background 180ms ease;
+  transition: opacity 180ms ease, transform 180ms ease, background 180ms ease;
 }
 
-.workflow-experience:hover {
+.workflow-experience:hover,
+.workflow-experience:focus-visible {
+  opacity: 1;
   background: rgba(255, 255, 255, 0.12);
   transform: translateY(-2px);
 }
