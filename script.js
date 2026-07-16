@@ -940,7 +940,7 @@ const stagedCapabilityReveals = [
   [".capability-tags", "0px 0px -30%"],
 ];
 const workflowStepReveals = Array.from(document.querySelectorAll(".workflow-steps .reveal"));
-const workflowStepRootMargins = ["0px 0px -8%", "0px 0px -24%", "0px 0px -40%", "0px 0px -41%"];
+const workflowStepRootMargins = ["0px 0px -8%", "0px 0px -24%", "0px 0px -40%", "0px 0px -56%"];
 let lastScrollY = window.scrollY;
 let isScrollingUp = false;
 
