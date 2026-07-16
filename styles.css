@@ -710,8 +710,9 @@ p {
 
 .release-facts small {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 700;
+  transform: translateY(-10px);
 }
 
 .workflow h2,
@@ -1668,7 +1669,7 @@ h2 em {
   }
 
   .release-facts small {
-    font-size: 11px;
+    font-size: 15px;
   }
 
   .workflow h2,
