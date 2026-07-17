@@ -4,8 +4,15 @@ const soundToggle = document.querySelector("#sound-toggle");
 const PHASE = ["A", "B", "C"].includes(window.SEEDANCE_PHASE) ? window.SEEDANCE_PHASE : "A";
 const WAITLIST_ENDPOINT = window.SEEDANCE_WAITLIST_ENDPOINT?.trim() || "";
 const PLAUSIBLE_SITE_ID = window.SEEDANCE_PLAUSIBLE_SITE_ID?.trim() || "";
+const GA_ID = window.SEEDANCE_GA_ID?.trim() || "";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const sourceDocument = "https://bytedance.sg.larkoffice.com/docx/VKQ1d57DMoEMKhxU1IrlG8GUgAI";
+const sourceDocument = "https://holycrab.ai/seedance-2-5/";
+const INBOUND_PARAMS = new URLSearchParams(window.location.search);
+const INBOUND_UTM = Object.fromEntries(
+  ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
+    .map((key) => [key, INBOUND_PARAMS.get(key)])
+    .filter(([, value]) => value),
+);
 const languageButtons = Array.from(document.querySelectorAll("[data-lang]"));
 const languageMenu = document.querySelector(".language-menu");
 const languageTrigger = document.querySelector("#language-trigger");
@@ -247,7 +254,7 @@ const translations = {
     feature4Point1: "更強的多語言理解與表達",
     feature4Point2: "複雜指令理解",
     feature4Point3: "面向全球團隊",
-    capabilitiesDisclaimer: "以上能力以官方正式發布為準。",
+    capabilitiesDisclaimer: "預覽素材——為網頁展示做過後製處理；最終能力以官方發布為準。",
     workflowTitle: "從靈感到交付，四步完成",
     step1Title: "寫下創意",
     step1Body: "寫下故事、鏡頭和情緒。",
@@ -339,7 +346,7 @@ const translations = {
     feature4Point1: "Stronger multilingual understanding and expression",
     feature4Point2: "Complex instruction understanding",
     feature4Point3: "Built for global teams",
-    capabilitiesDisclaimer: "Final capabilities subject to official release.",
+    capabilitiesDisclaimer: "Preview footage — post-processed for the web; final capabilities subject to official release.",
     workflowTitle: "Four steps from idea to delivery.",
     step1Title: "Write the idea",
     step1Body: "Write the story, camera and mood.",
@@ -432,7 +439,7 @@ const translations = {
     feature4Point1: "より強い多言語理解と表現",
     feature4Point2: "複雑な指示を理解",
     feature4Point3: "グローバルチーム向け",
-    capabilitiesDisclaimer: "上記の機能は正式リリース時の内容に準じます。",
+    capabilitiesDisclaimer: "プレビュー映像です。Web 表示用に後処理を加えており、最終的な機能は正式リリースに準じます。",
     workflowTitle: "アイデアから納品まで、4つのステップ。",
     step1Title: "アイデアを書く",
     step1Body: "物語、カメラ、感情を書く。",
@@ -493,7 +500,7 @@ const phaseCopy = {
       heroTitle: "Seedance 2.5<br />即将上线",
       heroNotice: "",
       navCta: "立即注册",
-      heroCta: "立即注册（领白名单）",
+      heroCta: "立即注册（抢优先体验名额）",
       workflowCta: "预约 Seedance 2.5 优先体验",
       footerCta: "注册预约优先体验",
     },
@@ -505,7 +512,7 @@ const phaseCopy = {
       heroTitle: "Seedance 2.5<br />即將上線",
       heroNotice: "",
       navCta: "立即註冊",
-      heroCta: "立即註冊（領白名單）",
+      heroCta: "立即註冊（搶優先體驗名額）",
       workflowCta: "預約 Seedance 2.5 優先體驗",
       footerCta: "註冊預約優先體驗",
     },
@@ -536,25 +543,25 @@ const phaseCopy = {
   B: {
     zh: {
       title: "Seedance 2.5 即将上线 | HolyCrab",
-      description: "BytePlus 已官宣 Seedance 2.5，HolyCrab 第一时间接入。加入白名单，优先体验。",
-      badge: "官宣已至 · 白名单限时开放",
+      description: "BytePlus 已官宣 Seedance 2.5，HolyCrab 第一时间接入。预约报名，优先体验。",
+      badge: "官宣已至 · 优先体验名额限时开放",
       heroTitle: "Seedance 2.5<br />即将上线",
       heroNotice: "BytePlus 已官宣，HolyCrab 第一时间接入",
-      navCta: "加入白名单",
-      heroCta: "加入白名单",
-      workflowCta: "加入 Seedance 2.5 白名单",
-      footerCta: "加入白名单",
+      navCta: "预约优先体验",
+      heroCta: "预约优先体验",
+      workflowCta: "预约 Seedance 2.5 优先体验",
+      footerCta: "预约优先体验",
     },
     zhHant: {
       title: "Seedance 2.5 即將上線 | HolyCrab",
-      description: "BytePlus 已正式公布 Seedance 2.5，HolyCrab 第一時間接入。加入白名單，優先體驗。",
-      badge: "正式公布 · 白名單限時開放",
+      description: "BytePlus 已正式公布 Seedance 2.5，HolyCrab 第一時間接入。預約報名，優先體驗。",
+      badge: "正式公布 · 優先體驗名額限時開放",
       heroTitle: "Seedance 2.5<br />即將上線",
       heroNotice: "BytePlus 已正式公布，HolyCrab 第一時間接入",
-      navCta: "加入白名單",
-      heroCta: "加入白名單",
-      workflowCta: "加入 Seedance 2.5 白名單",
-      footerCta: "加入白名單",
+      navCta: "預約優先體驗",
+      heroCta: "預約優先體驗",
+      workflowCta: "預約 Seedance 2.5 優先體驗",
+      footerCta: "預約優先體驗",
     },
     en: {
       title: "Seedance 2.5 Announced | HolyCrab",
@@ -658,10 +665,12 @@ const applyPhase = (language) => {
 
   ctaLinks.forEach((link) => {
     const url = new URL(link.href);
-    url.searchParams.set("utm_source", "sd25lp");
-    url.searchParams.set("utm_medium", "landing");
-    url.searchParams.set("utm_campaign", phaseCampaigns[PHASE]);
+    url.searchParams.set("utm_source", INBOUND_UTM.utm_source || "sd25lp");
+    url.searchParams.set("utm_medium", INBOUND_UTM.utm_medium || "landing");
+    url.searchParams.set("utm_campaign", INBOUND_UTM.utm_campaign || phaseCampaigns[PHASE]);
     url.searchParams.set("utm_content", link.dataset.ctaPosition);
+    const inboundTerm = INBOUND_UTM.utm_term || INBOUND_UTM.utm_content;
+    if (inboundTerm) url.searchParams.set("utm_term", inboundTerm);
     link.href = url.toString();
   });
 };
@@ -679,9 +688,26 @@ if (PLAUSIBLE_SITE_ID) {
   document.head.append(plausibleScript);
 }
 
+if (GA_ID) {
+  window.dataLayer = window.dataLayer || [];
+  window.gtag =
+    window.gtag ||
+    function gtag() {
+      window.dataLayer.push(arguments);
+    };
+  window.gtag("js", new Date());
+  window.gtag("config", GA_ID);
+
+  const gaScript = document.createElement("script");
+  gaScript.async = true;
+  gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_ID)}`;
+  document.head.append(gaScript);
+}
+
 const trackEvent = (name, properties = {}) => {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({ event: name, ...properties });
+  window.gtag?.("event", name, properties);
   window.plausible?.(name, { props: properties });
   window.dispatchEvent(new CustomEvent("holycrab:analytics", { detail: { name, properties } }));
 };
@@ -731,13 +757,20 @@ waitlistForm?.addEventListener("submit", async (event) => {
     phase: PHASE,
     language: currentLanguage,
     source: "sd25lp",
+    utm: INBOUND_UTM,
     submitted_at: new Date().toISOString(),
   };
 
   if (!WAITLIST_ENDPOINT) {
-    const subject = encodeURIComponent("Seedance 2.5 上线通知登记");
+    const mailtoSubject = {
+      zh: "Seedance 2.5 上线通知登记",
+      zhHant: "Seedance 2.5 上線通知登記",
+      en: "Seedance 2.5 launch notification signup",
+      ja: "Seedance 2.5 公開通知の登録",
+    };
+    const subject = encodeURIComponent(mailtoSubject[currentLanguage] || mailtoSubject.en);
     const body = encodeURIComponent(
-      `邮箱：${email}\n页面语言：${currentLanguage}\n提交时间：${payload.submitted_at}`,
+      `email: ${email}\nlanguage: ${currentLanguage}\nsubmitted_at: ${payload.submitted_at}`,
     );
     setWaitlistStatus(messages.notifyFallback);
     window.location.href = `mailto:cs@holycrab.ai?subject=${subject}&body=${body}`;
@@ -755,7 +788,10 @@ waitlistForm?.addEventListener("submit", async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    if (!response.ok) throw new Error(`Waitlist request failed: ${response.status}`);
+    const result = await response.json().catch(() => null);
+    if (!response.ok || result?.stored !== true) {
+      throw new Error(`Waitlist request failed: ${response.status}`);
+    }
 
     waitlistForm.reset();
     setWaitlistStatus(messages.notifySuccess, "success");
