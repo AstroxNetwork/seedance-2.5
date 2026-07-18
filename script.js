@@ -873,7 +873,9 @@ const soundIcons = {
 };
 
 const siteVideos = Array.from(document.querySelectorAll("main video"));
-const contentVideos = siteVideos.filter((video) => video !== heroVideo);
+const contentVideos = siteVideos.filter(
+  (video) => video !== heroVideo && !video.closest(".industry-video"),
+);
 const contentAudioButtons = new Map();
 
 const setAudioButton = (button, video) => {
