@@ -480,6 +480,11 @@ p {
   line-height: 0.86;
 }
 
+.hero-model-five {
+  display: inline-block;
+  transform: translateY(-10px);
+}
+
 .phase-badge {
   min-height: 30px;
   width: fit-content;

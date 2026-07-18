@@ -657,7 +657,7 @@ const applyPhase = (language) => {
     if (value == null) return;
 
     if (element.dataset.phaseCopy === "heroTitle") {
-      element.innerHTML = value;
+      element.innerHTML = value.replace("2.5", '2.<span class="hero-model-five">5</span>');
     } else {
       element.textContent = value;
     }
