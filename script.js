@@ -241,8 +241,6 @@ const translations = {
     feature2Point1: "50 個多模態參考",
     feature2Point2: "多角色、多場景協同",
     feature2Point3: "主體與運動更穩定",
-    editSelected: "選取區域",
-    editCommand: "只換玻璃杯，保留人物動作和原片光線。",
     caseEditing: "局部編輯",
     feature3Title: "只改想改的，<br />不必推翻整條片。",
     feature3Body: "局部替換物件、調整動作、修正細節，盡量保留原有構圖、節奏和質感。",
@@ -331,8 +329,6 @@ const translations = {
     feature2Point1: "50 multimodal references",
     feature2Point2: "Multiple subjects and scenes, in sync",
     feature2Point3: "More stable subjects and motion",
-    editSelected: "Selected area",
-    editCommand: "Replace only the glass. Keep the action and original lighting.",
     caseEditing: "LOCAL EDITING",
     feature3Title: "Change only what matters.<br />Keep the rest of the film.",
     feature3Body:
@@ -424,8 +420,6 @@ const translations = {
     feature2Point1: "50件のマルチモーダル参照",
     feature2Point2: "複数人物・複数シーンを同期",
     feature2Point3: "主体と動きがより安定",
-    editSelected: "選択範囲",
-    editCommand: "グラスだけを変更。人物の動きと元の照明は維持。",
     caseEditing: "部分編集",
     feature3Title: "変えたい部分だけを編集。<br />映像全体はそのまま。",
     feature3Body:
