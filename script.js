@@ -1045,6 +1045,7 @@ let expandedCapability = null;
 let capabilityCollapseTimer = 0;
 let capabilityHoverBounds = null;
 let capabilityPointer = null;
+let capabilityAudioCycle = 0;
 
 const isInsideCapabilityTrigger = (event, bounds = capabilityHoverBounds) =>
   bounds &&
@@ -1057,6 +1058,8 @@ const setCapabilityVideoAudio = async (feature, withSound) => {
   const video = feature?.querySelector(".feature-media video");
   if (!video) return;
 
+  const audioCycle = ++capabilityAudioCycle;
+
   if (!withSound) {
     video.muted = true;
     syncAudioButtons();
@@ -1066,15 +1069,16 @@ const setCapabilityVideoAudio = async (feature, withSound) => {
   siteVideos.forEach((otherVideo) => {
     otherVideo.muted = otherVideo !== video;
   });
-  video.muted = false;
+  video.muted = true;
 
   try {
     await video.play();
+    if (audioCycle === capabilityAudioCycle) video.muted = false;
   } catch {
-    video.muted = true;
+    if (audioCycle === capabilityAudioCycle) video.muted = true;
   }
 
-  syncAudioButtons();
+  if (audioCycle === capabilityAudioCycle) syncAudioButtons();
 };
 
 const resetCapabilityExpansion = (feature) => {
