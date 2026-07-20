@@ -688,20 +688,13 @@ if (PLAUSIBLE_SITE_ID) {
   document.head.append(plausibleScript);
 }
 
-if (GA_ID) {
+if (GA_ID && !window.gtag) {
   window.dataLayer = window.dataLayer || [];
   window.gtag =
     window.gtag ||
     function gtag() {
       window.dataLayer.push(arguments);
     };
-  window.gtag("js", new Date());
-  window.gtag("config", GA_ID);
-
-  const gaScript = document.createElement("script");
-  gaScript.async = true;
-  gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_ID)}`;
-  document.head.append(gaScript);
 }
 
 const trackEvent = (name, properties = {}) => {
