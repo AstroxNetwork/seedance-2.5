@@ -1,11 +1,3 @@
-const heroVideo = document.querySelector("#reboot-video");
-const hero = document.querySelector(".hero");
-const heroTitle = document.querySelector("#hero-title");
-const soundToggle = document.querySelector("#sound-toggle");
-const PHASE = ["A", "B", "C"].includes(window.SEEDANCE_PHASE) ? window.SEEDANCE_PHASE : "A";
-const WAITLIST_ENDPOINT = window.SEEDANCE_WAITLIST_ENDPOINT?.trim() || "";
-const PLAUSIBLE_SITE_ID = window.SEEDANCE_PLAUSIBLE_SITE_ID?.trim() || "";
-const GA_ID = window.SEEDANCE_GA_ID?.trim() || "";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sourceDocument = "https://holycrab.ai/seedance-2-5/";
 const INBOUND_PARAMS = new URLSearchParams(window.location.search);
@@ -1037,6 +1029,81 @@ document.querySelectorAll(".feature-media video").forEach((video) => {
   video.addEventListener("ended", () => {
     button.textContent = getMediaCopy().caseReplay;
   });
+});
+
+const capabilityFeatures = Array.from(document.querySelectorAll(".capabilities .feature"));
+const capabilityHoverMedia = window.matchMedia("(hover: hover) and (pointer: fine)");
+let expandedCapability = null;
+let capabilityCollapseTimer = 0;
+
+const resetCapabilityExpansion = (feature) => {
+  if (!feature) return;
+
+  const media = feature.querySelector(".feature-media");
+  window.clearTimeout(capabilityCollapseTimer);
+  feature.classList.remove("is-video-expanded", "is-video-expanded-open");
+  media?.style.removeProperty("--capability-video-top");
+  media?.style.removeProperty("--capability-video-left");
+  media?.style.removeProperty("--capability-video-width");
+  media?.style.removeProperty("--capability-video-height");
+  document.body.classList.remove("capability-video-open");
+
+  if (expandedCapability === feature) expandedCapability = null;
+};
+
+const collapseCapability = (feature = expandedCapability) => {
+  if (!feature?.classList.contains("is-video-expanded")) return;
+
+  feature.classList.remove("is-video-expanded-open");
+  document.body.classList.remove("capability-video-open");
+  window.clearTimeout(capabilityCollapseTimer);
+  capabilityCollapseTimer = window.setTimeout(() => resetCapabilityExpansion(feature), 540);
+};
+
+const expandCapability = (feature) => {
+  if (!capabilityHoverMedia.matches || reduceMotion) return;
+
+  const media = feature.querySelector(".feature-media");
+  if (!media) return;
+
+  if (expandedCapability && expandedCapability !== feature) {
+    resetCapabilityExpansion(expandedCapability);
+  }
+
+  if (feature.classList.contains("is-video-expanded")) {
+    window.clearTimeout(capabilityCollapseTimer);
+    document.body.classList.add("capability-video-open");
+    feature.classList.add("is-video-expanded-open");
+    return;
+  }
+
+  const bounds = media.getBoundingClientRect();
+  media.style.setProperty("--capability-video-top", `${bounds.top}px`);
+  media.style.setProperty("--capability-video-left", `${bounds.left}px`);
+  media.style.setProperty("--capability-video-width", `${bounds.width}px`);
+  media.style.setProperty("--capability-video-height", `${bounds.height}px`);
+  feature.classList.add("is-video-expanded");
+  document.body.classList.add("capability-video-open");
+  expandedCapability = feature;
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      if (expandedCapability === feature) feature.classList.add("is-video-expanded-open");
+    });
+  });
+};
+
+capabilityFeatures.forEach((feature) => {
+  const media = feature.querySelector(".feature-media");
+  if (!media) return;
+
+  media.addEventListener("pointerenter", () => expandCapability(feature));
+  media.addEventListener("pointerleave", () => collapseCapability(feature));
+});
+
+window.addEventListener("blur", () => collapseCapability());
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") collapseCapability();
 });
 
 const ambientVideos = document.querySelectorAll(".industry-video video, .workflow-video video");
