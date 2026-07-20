@@ -482,7 +482,7 @@ p {
 
 .hero-model-five {
   display: inline-block;
-  transform: translateY(-20px);
+  transform: translateY(clamp(-20px, -1.2vw, -8px));
 }
 
 .phase-badge {
