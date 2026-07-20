@@ -647,7 +647,7 @@ let heroDecryptDelay = 0;
 const heroTitleMarkup = (text) =>
   text
     .replace(/\n/g, "<br />")
-    .replace("2.5", '2.<span class="hero-model-five">5</span>');
+    .replace("2.5", '<span class="hero-model-version">2.<span class="hero-model-five">5</span></span>');
 
 const setHeroTitle = (value) => {
   if (!heroTitle) return;

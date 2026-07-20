@@ -485,6 +485,10 @@ p {
   transform: translateY(clamp(-20px, -1.2vw, -8px));
 }
 
+.hero-model-version {
+  white-space: nowrap;
+}
+
 .phase-badge {
   min-height: 30px;
   width: fit-content;
