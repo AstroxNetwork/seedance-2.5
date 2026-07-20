@@ -1,5 +1,6 @@
 const heroVideo = document.querySelector("#reboot-video");
 const hero = document.querySelector(".hero");
+const heroTitle = document.querySelector("#hero-title");
 const soundToggle = document.querySelector("#sound-toggle");
 const PHASE = ["A", "B", "C"].includes(window.SEEDANCE_PHASE) ? window.SEEDANCE_PHASE : "A";
 const WAITLIST_ENDPOINT = window.SEEDANCE_WAITLIST_ENDPOINT?.trim() || "";
@@ -639,6 +640,63 @@ const phaseElements = Array.from(document.querySelectorAll("[data-phase-copy]"))
 const ctaLinks = Array.from(document.querySelectorAll("[data-cta-position]"));
 const metaDescription = document.querySelector('meta[name="description"]');
 const robotsMeta = document.querySelector('meta[name="robots"]');
+const heroDecryptCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*";
+let heroDecryptFrame = 0;
+let heroDecryptDelay = 0;
+
+const heroTitleMarkup = (text) =>
+  text
+    .replace(/\n/g, "<br />")
+    .replace("2.5", '2.<span class="hero-model-five">5</span>');
+
+const setHeroTitle = (value) => {
+  if (!heroTitle) return;
+
+  const title = value.replace(/<br\s*\/?>/gi, "\n");
+  const targetCharacters = Array.from(title);
+  const plainTitle = title.replace(/\n/g, " ");
+
+  window.cancelAnimationFrame(heroDecryptFrame);
+  window.clearTimeout(heroDecryptDelay);
+  heroTitle.setAttribute("aria-label", plainTitle);
+
+  const renderFinalTitle = () => {
+    heroTitle.innerHTML = heroTitleMarkup(title);
+  };
+
+  if (reduceMotion) {
+    renderFinalTitle();
+    return;
+  }
+
+  const startDecrypt = () => {
+    const startedAt = window.performance.now();
+    const duration = 920;
+
+    const renderFrame = (now) => {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const revealedCharacters = Math.floor(progress * targetCharacters.length);
+      const decrypted = targetCharacters
+        .map((character, index) => {
+          if (character === "\n" || character === " " || index < revealedCharacters) return character;
+          return heroDecryptCharacters[Math.floor(Math.random() * heroDecryptCharacters.length)];
+        })
+        .join("");
+
+      heroTitle.innerHTML = heroTitleMarkup(decrypted);
+
+      if (progress < 1) {
+        heroDecryptFrame = window.requestAnimationFrame(renderFrame);
+      } else {
+        renderFinalTitle();
+      }
+    };
+
+    heroDecryptFrame = window.requestAnimationFrame(renderFrame);
+  };
+
+  heroDecryptDelay = window.setTimeout(startDecrypt, heroTitle.classList.contains("is-visible") ? 0 : 420);
+};
 
 const applyPhase = (language) => {
   const copy = phaseCopy[PHASE]?.[language] || phaseCopy.A.zh;
@@ -657,7 +715,7 @@ const applyPhase = (language) => {
     if (value == null) return;
 
     if (element.dataset.phaseCopy === "heroTitle") {
-      element.innerHTML = value.replace("2.5", '2.<span class="hero-model-five">5</span>');
+      setHeroTitle(value);
     } else {
       element.textContent = value;
     }
