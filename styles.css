@@ -771,6 +771,7 @@ h2 em {
 }
 
 .feature {
+  position: relative;
   min-height: 760px;
   padding: 104px max(36px, calc((100vw - 1240px) / 2));
   display: grid;
@@ -812,7 +813,7 @@ h2 em {
 
 .feature-media {
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   aspect-ratio: 16 / 9;
   background: #28352f;
   border-radius: 6px;
@@ -892,7 +893,7 @@ h2 em {
     border-color: transparent;
   }
 
-  .feature.is-video-expanded .feature-media > :not(video):not(.capability-audio-toggle) {
+  .feature.is-video-expanded .feature-media > :not(video) {
     opacity: 0;
     transition: opacity 160ms ease;
   }
@@ -916,13 +917,23 @@ h2 em {
 
 .capability-audio-toggle {
   position: absolute;
-  bottom: -54px;
-  left: 0;
+  top: var(--capability-audio-local-top, 0);
+  left: var(--capability-audio-local-left, 0);
   z-index: 5;
+  visibility: hidden;
 }
 
-.feature.is-video-expanded .capability-audio-toggle {
-  bottom: -22px;
+.capability-audio-toggle.is-positioned {
+  visibility: visible;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .feature.is-video-expanded .capability-audio-toggle {
+    position: fixed;
+    top: var(--capability-audio-viewport-top);
+    left: var(--capability-audio-viewport-left);
+    z-index: 46;
+  }
 }
 
 .case-play {
@@ -1754,14 +1765,6 @@ h2 em {
   .video-sound-toggle {
     right: 12px;
     bottom: 12px;
-  }
-
-  .capability-audio-toggle {
-    bottom: -42px;
-  }
-
-  .feature.is-video-expanded .capability-audio-toggle {
-    bottom: -22px;
   }
 
   .feature h3 {

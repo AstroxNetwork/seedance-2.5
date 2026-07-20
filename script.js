@@ -1002,7 +1002,7 @@ capabilityVideos.forEach((video) => {
   button.className = "media-button icon-only capability-audio-toggle";
   button.innerHTML = '<span class="media-icon" aria-hidden="true"></span>';
   button.addEventListener("click", () => toggleVideoAudio(video));
-  video.parentElement?.append(button);
+  video.closest(".feature")?.append(button);
   capabilityAudioButtons.set(video, button);
   setAudioButton(button, video);
 });
@@ -1053,6 +1053,51 @@ let expandedCapability = null;
 let capabilityCollapseTimer = 0;
 let capabilityHoverBounds = null;
 let capabilityPointer = null;
+const capabilityAudioPositionFrames = new WeakMap();
+
+const positionCapabilityAudioButton = (feature) => {
+  if (!feature || feature.classList.contains("is-video-expanded")) return;
+
+  const media = feature.querySelector(".feature-media");
+  const button = feature.querySelector(".capability-audio-toggle");
+  if (!media || !button) return;
+
+  const mediaBounds = media.getBoundingClientRect();
+  const buttonBounds = button.getBoundingClientRect();
+  const buttonStyles = getComputedStyle(button);
+  const containingBlockLeft = buttonBounds.left - (Number.parseFloat(buttonStyles.left) || 0);
+  const containingBlockTop = buttonBounds.top - (Number.parseFloat(buttonStyles.top) || 0);
+  button.style.setProperty("--capability-audio-local-left", `${mediaBounds.left - containingBlockLeft}px`);
+  button.style.setProperty("--capability-audio-local-top", `${mediaBounds.bottom + 10 - containingBlockTop}px`);
+  button.classList.add("is-positioned");
+};
+
+const pinCapabilityAudioButton = (feature) => {
+  const button = feature?.querySelector(".capability-audio-toggle");
+  if (!button) return;
+
+  const bounds = button.getBoundingClientRect();
+  button.style.setProperty("--capability-audio-viewport-left", `${bounds.left}px`);
+  button.style.setProperty("--capability-audio-viewport-top", `${bounds.top}px`);
+};
+
+const trackCapabilityAudioButton = (feature, duration = 760) => {
+  const previousFrame = capabilityAudioPositionFrames.get(feature);
+  if (previousFrame) window.cancelAnimationFrame(previousFrame);
+
+  const startedAt = window.performance.now();
+  const updatePosition = (timestamp) => {
+    positionCapabilityAudioButton(feature);
+    if (timestamp - startedAt >= duration) {
+      capabilityAudioPositionFrames.delete(feature);
+      return;
+    }
+
+    capabilityAudioPositionFrames.set(feature, window.requestAnimationFrame(updatePosition));
+  };
+
+  capabilityAudioPositionFrames.set(feature, window.requestAnimationFrame(updatePosition));
+};
 
 const isInsideCapabilityTrigger = (event, bounds = capabilityHoverBounds) =>
   bounds &&
@@ -1080,23 +1125,28 @@ const setCapabilityVideoPlayback = async (feature, shouldPlay) => {
   syncAudioButtons();
 };
 
-const resetCapabilityExpansion = (feature) => {
+const resetCapabilityExpansion = (feature, shouldMute = true) => {
   if (!feature) return;
 
   const media = feature.querySelector(".feature-media");
-  setCapabilityVideoPlayback(feature, false);
+  const button = feature.querySelector(".capability-audio-toggle");
+  if (shouldMute) setCapabilityVideoPlayback(feature, false);
   window.clearTimeout(capabilityCollapseTimer);
   feature.classList.remove("is-video-expanded", "is-video-expanded-open");
   media?.style.removeProperty("--capability-video-top");
   media?.style.removeProperty("--capability-video-left");
   media?.style.removeProperty("--capability-video-width");
   media?.style.removeProperty("--capability-video-height");
+  button?.style.removeProperty("--capability-audio-viewport-left");
+  button?.style.removeProperty("--capability-audio-viewport-top");
   document.body.classList.remove("capability-video-open");
 
   if (expandedCapability === feature) {
     expandedCapability = null;
     capabilityHoverBounds = null;
   }
+
+  window.requestAnimationFrame(() => positionCapabilityAudioButton(feature));
 };
 
 const collapseCapability = (feature = expandedCapability) => {
@@ -1106,7 +1156,7 @@ const collapseCapability = (feature = expandedCapability) => {
   feature.classList.remove("is-video-expanded-open");
   document.body.classList.remove("capability-video-open");
   window.clearTimeout(capabilityCollapseTimer);
-  capabilityCollapseTimer = window.setTimeout(() => resetCapabilityExpansion(feature), 500);
+  capabilityCollapseTimer = window.setTimeout(() => resetCapabilityExpansion(feature, false), 500);
 };
 
 const expandCapability = (feature) => {
@@ -1129,6 +1179,8 @@ const expandCapability = (feature) => {
   }
 
   const bounds = media.getBoundingClientRect();
+  positionCapabilityAudioButton(feature);
+  pinCapabilityAudioButton(feature);
   capabilityHoverBounds = bounds;
   media.style.setProperty("--capability-video-top", `${bounds.top}px`);
   media.style.setProperty("--capability-video-left", `${bounds.left}px`);
@@ -1152,12 +1204,34 @@ capabilityFeatures.forEach((feature) => {
   const media = feature.querySelector(".feature-media");
   if (!media) return;
 
+  positionCapabilityAudioButton(feature);
+
+  media.addEventListener("transitionrun", (event) => {
+    if (event.propertyName === "transform") trackCapabilityAudioButton(feature);
+  });
+  media.addEventListener("transitionend", (event) => {
+    if (event.propertyName === "transform") positionCapabilityAudioButton(feature);
+  });
+
   media.addEventListener("pointerenter", (event) => {
     capabilityPointer = event;
     expandCapability(feature);
   });
   media.addEventListener("pointerleave", () => collapseCapability(feature));
 });
+
+if ("ResizeObserver" in window) {
+  const capabilityLayoutObserver = new ResizeObserver((entries) => {
+    entries.forEach(({ target }) => positionCapabilityAudioButton(target));
+  });
+  capabilityFeatures.forEach((feature) => capabilityLayoutObserver.observe(feature));
+} else {
+  window.addEventListener(
+    "resize",
+    () => capabilityFeatures.forEach((feature) => positionCapabilityAudioButton(feature)),
+    { passive: true },
+  );
+}
 
 window.addEventListener(
   "pointermove",
