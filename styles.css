@@ -932,7 +932,7 @@ h2 em {
     position: fixed;
     top: var(--capability-audio-viewport-top);
     left: var(--capability-audio-viewport-left);
-    z-index: 46;
+    z-index: 44;
   }
 }
 
