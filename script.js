@@ -126,6 +126,7 @@ const updateNavRefraction = () => {
   const edgeSize = Math.min(width, height) * (navGlassSettings.borderWidth * 0.5);
   const mapWidth = Math.max(1, width - edgeSize * 2);
   const mapHeight = Math.max(1, height - edgeSize * 2);
+  const distortionDensity = Math.min(1, Math.min(width, height) / 200);
   const mapSvg = `
     <svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -146,7 +147,7 @@ const updateNavRefraction = () => {
 
   navGlassMap.setAttribute("href", `data:image/svg+xml,${encodeURIComponent(mapSvg)}`);
   navDisplacementChannels.forEach(([channel, offset]) => {
-    channel?.setAttribute("scale", String(navGlassSettings.distortionScale + offset));
+    channel?.setAttribute("scale", String((navGlassSettings.distortionScale + offset) * distortionDensity));
   });
   navGlassBlur?.setAttribute("stdDeviation", String(navGlassSettings.displace));
 };
