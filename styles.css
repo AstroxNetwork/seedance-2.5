@@ -839,6 +839,19 @@ h2 em {
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .feature.is-video-expanded::before {
+    width: 100%;
+    display: block;
+    aspect-ratio: 16 / 9;
+    content: "";
+    order: 0;
+    visibility: hidden;
+  }
+
+  .feature-reverse.is-video-expanded::before {
+    order: 2;
+  }
+
   .feature-media.reveal {
     transition:
       top 500ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -880,13 +893,6 @@ h2 em {
   .feature.is-video-expanded .feature-media > :not(video):not(.video-sound-toggle) {
     opacity: 0;
     transition: opacity 160ms ease;
-  }
-
-  .feature.is-video-expanded.is-video-expanded-open .feature-copy {
-    visibility: hidden;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 160ms ease, visibility 0s linear 160ms;
   }
 
   body.capability-video-open {
