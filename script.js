@@ -1065,7 +1065,7 @@ const collapseCapability = (feature = expandedCapability) => {
   feature.classList.remove("is-video-expanded-open");
   document.body.classList.remove("capability-video-open");
   window.clearTimeout(capabilityCollapseTimer);
-  capabilityCollapseTimer = window.setTimeout(() => resetCapabilityExpansion(feature), 540);
+  capabilityCollapseTimer = window.setTimeout(() => resetCapabilityExpansion(feature), 500);
 };
 
 const expandCapability = (feature) => {
