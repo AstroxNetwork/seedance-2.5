@@ -882,7 +882,7 @@ h2 em {
     transition: opacity 160ms ease;
   }
 
-  .feature.is-video-expanded .feature-copy {
+  .feature.is-video-expanded.is-video-expanded-open .feature-copy {
     visibility: hidden;
     pointer-events: none;
     opacity: 0;
