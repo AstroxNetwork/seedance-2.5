@@ -1048,7 +1048,8 @@ document.querySelectorAll(".feature-media video").forEach((video) => {
 });
 
 const capabilityFeatures = Array.from(document.querySelectorAll(".capabilities .feature"));
-const capabilityHoverMedia = window.matchMedia("(hover: hover) and (pointer: fine)");
+const capabilityHoverMedia = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 641px)");
+const capabilityMobileMedia = window.matchMedia("(max-width: 640px)");
 let expandedCapability = null;
 let capabilityCollapseTimer = 0;
 let capabilityHoverBounds = null;
@@ -1067,8 +1068,14 @@ const positionCapabilityAudioButton = (feature) => {
   const buttonStyles = getComputedStyle(button);
   const containingBlockLeft = buttonBounds.left - (Number.parseFloat(buttonStyles.left) || 0);
   const containingBlockTop = buttonBounds.top - (Number.parseFloat(buttonStyles.top) || 0);
-  button.style.setProperty("--capability-audio-local-left", `${mediaBounds.left - containingBlockLeft}px`);
-  button.style.setProperty("--capability-audio-local-top", `${mediaBounds.bottom + 10 - containingBlockTop}px`);
+  const targetLeft = capabilityMobileMedia.matches
+    ? mediaBounds.right - buttonBounds.width - 12
+    : mediaBounds.left;
+  const targetTop = capabilityMobileMedia.matches
+    ? mediaBounds.bottom - buttonBounds.height - 12
+    : mediaBounds.bottom + 10;
+  button.style.setProperty("--capability-audio-local-left", `${targetLeft - containingBlockLeft}px`);
+  button.style.setProperty("--capability-audio-local-top", `${targetTop - containingBlockTop}px`);
   button.classList.add("is-positioned");
 };
 
@@ -1232,6 +1239,10 @@ if ("ResizeObserver" in window) {
     { passive: true },
   );
 }
+
+capabilityMobileMedia.addEventListener("change", () => {
+  capabilityFeatures.forEach((feature) => positionCapabilityAudioButton(feature));
+});
 
 window.addEventListener(
   "pointermove",

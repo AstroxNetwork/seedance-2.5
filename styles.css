@@ -841,7 +841,7 @@ h2 em {
   content: "";
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) and (min-width: 641px) {
   .feature.is-video-expanded::before {
     width: 100%;
     display: block;
@@ -927,7 +927,7 @@ h2 em {
   visibility: visible;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) and (min-width: 641px) {
   .feature.is-video-expanded .capability-audio-toggle {
     position: fixed;
     top: var(--capability-audio-viewport-top);
