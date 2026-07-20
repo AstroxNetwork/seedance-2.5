@@ -925,7 +925,7 @@ const soundIcons = {
 
 const siteVideos = Array.from(document.querySelectorAll("main video"));
 const contentVideos = siteVideos.filter(
-  (video) => video !== heroVideo && !video.closest(".industry-video"),
+  (video) => video !== heroVideo && !video.closest(".industry-video") && !video.closest(".capabilities"),
 );
 const contentAudioButtons = new Map();
 
@@ -1053,10 +1053,35 @@ const isInsideCapabilityTrigger = (event, bounds = capabilityHoverBounds) =>
   event.clientY >= bounds.top &&
   event.clientY <= bounds.bottom;
 
+const setCapabilityVideoAudio = async (feature, withSound) => {
+  const video = feature?.querySelector(".feature-media video");
+  if (!video) return;
+
+  if (!withSound) {
+    video.muted = true;
+    syncAudioButtons();
+    return;
+  }
+
+  siteVideos.forEach((otherVideo) => {
+    otherVideo.muted = otherVideo !== video;
+  });
+  video.muted = false;
+
+  try {
+    await video.play();
+  } catch {
+    video.muted = true;
+  }
+
+  syncAudioButtons();
+};
+
 const resetCapabilityExpansion = (feature) => {
   if (!feature) return;
 
   const media = feature.querySelector(".feature-media");
+  setCapabilityVideoAudio(feature, false);
   window.clearTimeout(capabilityCollapseTimer);
   feature.classList.remove("is-video-expanded", "is-video-expanded-open");
   media?.style.removeProperty("--capability-video-top");
@@ -1074,6 +1099,7 @@ const resetCapabilityExpansion = (feature) => {
 const collapseCapability = (feature = expandedCapability) => {
   if (!feature?.classList.contains("is-video-expanded-open")) return;
 
+  setCapabilityVideoAudio(feature, false);
   feature.classList.remove("is-video-expanded-open");
   document.body.classList.remove("capability-video-open");
   window.clearTimeout(capabilityCollapseTimer);
@@ -1085,6 +1111,8 @@ const expandCapability = (feature) => {
 
   const media = feature.querySelector(".feature-media");
   if (!media) return;
+
+  setCapabilityVideoAudio(feature, true);
 
   if (expandedCapability && expandedCapability !== feature) {
     resetCapabilityExpansion(expandedCapability);
