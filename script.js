@@ -1043,6 +1043,15 @@ const capabilityFeatures = Array.from(document.querySelectorAll(".capabilities .
 const capabilityHoverMedia = window.matchMedia("(hover: hover) and (pointer: fine)");
 let expandedCapability = null;
 let capabilityCollapseTimer = 0;
+let capabilityHoverBounds = null;
+let capabilityPointer = null;
+
+const isInsideCapabilityTrigger = (event, bounds = capabilityHoverBounds) =>
+  bounds &&
+  event.clientX >= bounds.left &&
+  event.clientX <= bounds.right &&
+  event.clientY >= bounds.top &&
+  event.clientY <= bounds.bottom;
 
 const resetCapabilityExpansion = (feature) => {
   if (!feature) return;
@@ -1056,11 +1065,14 @@ const resetCapabilityExpansion = (feature) => {
   media?.style.removeProperty("--capability-video-height");
   document.body.classList.remove("capability-video-open");
 
-  if (expandedCapability === feature) expandedCapability = null;
+  if (expandedCapability === feature) {
+    expandedCapability = null;
+    capabilityHoverBounds = null;
+  }
 };
 
 const collapseCapability = (feature = expandedCapability) => {
-  if (!feature?.classList.contains("is-video-expanded")) return;
+  if (!feature?.classList.contains("is-video-expanded-open")) return;
 
   feature.classList.remove("is-video-expanded-open");
   document.body.classList.remove("capability-video-open");
@@ -1086,6 +1098,7 @@ const expandCapability = (feature) => {
   }
 
   const bounds = media.getBoundingClientRect();
+  capabilityHoverBounds = bounds;
   media.style.setProperty("--capability-video-top", `${bounds.top}px`);
   media.style.setProperty("--capability-video-left", `${bounds.left}px`);
   media.style.setProperty("--capability-video-width", `${bounds.width}px`);
@@ -1096,7 +1109,10 @@ const expandCapability = (feature) => {
 
   window.requestAnimationFrame(() => {
     window.requestAnimationFrame(() => {
-      if (expandedCapability === feature) feature.classList.add("is-video-expanded-open");
+      if (expandedCapability !== feature) return;
+
+      feature.classList.add("is-video-expanded-open");
+      if (!isInsideCapabilityTrigger(capabilityPointer)) collapseCapability(feature);
     });
   });
 };
@@ -1105,9 +1121,30 @@ capabilityFeatures.forEach((feature) => {
   const media = feature.querySelector(".feature-media");
   if (!media) return;
 
-  media.addEventListener("pointerenter", () => expandCapability(feature));
+  media.addEventListener("pointerenter", (event) => {
+    capabilityPointer = event;
+    expandCapability(feature);
+  });
   media.addEventListener("pointerleave", () => collapseCapability(feature));
 });
+
+window.addEventListener(
+  "pointermove",
+  (event) => {
+    capabilityPointer = event;
+    if (!expandedCapability || !capabilityHoverBounds) return;
+
+    if (isInsideCapabilityTrigger(event)) {
+      if (!expandedCapability.classList.contains("is-video-expanded-open")) {
+        expandCapability(expandedCapability);
+      }
+      return;
+    }
+
+    collapseCapability(expandedCapability);
+  },
+  { passive: true },
+);
 
 window.addEventListener("blur", () => collapseCapability());
 window.addEventListener("keydown", (event) => {
