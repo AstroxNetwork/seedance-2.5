@@ -812,7 +812,7 @@ h2 em {
 
 .feature-media {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   aspect-ratio: 16 / 9;
   background: #28352f;
   border-radius: 6px;
@@ -826,6 +826,8 @@ h2 em {
 }
 
 .feature-media > video {
+  display: block;
+  border-radius: inherit;
   cursor: pointer;
 }
 
@@ -890,7 +892,7 @@ h2 em {
     border-color: transparent;
   }
 
-  .feature.is-video-expanded .feature-media > :not(video) {
+  .feature.is-video-expanded .feature-media > :not(video):not(.capability-audio-toggle) {
     opacity: 0;
     transition: opacity 160ms ease;
   }
@@ -910,6 +912,17 @@ h2 em {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
+}
+
+.capability-audio-toggle {
+  position: absolute;
+  bottom: -54px;
+  left: 0;
+  z-index: 5;
+}
+
+.feature.is-video-expanded .capability-audio-toggle {
+  bottom: -22px;
 }
 
 .case-play {
@@ -1741,6 +1754,14 @@ h2 em {
   .video-sound-toggle {
     right: 12px;
     bottom: 12px;
+  }
+
+  .capability-audio-toggle {
+    bottom: -42px;
+  }
+
+  .feature.is-video-expanded .capability-audio-toggle {
+    bottom: -22px;
   }
 
   .feature h3 {

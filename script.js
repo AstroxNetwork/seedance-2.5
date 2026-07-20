@@ -918,10 +918,12 @@ const soundIcons = {
 };
 
 const siteVideos = Array.from(document.querySelectorAll("main video"));
+const capabilityVideos = Array.from(document.querySelectorAll(".capabilities .feature-media video"));
 const contentVideos = siteVideos.filter(
   (video) => video !== heroVideo && !video.closest(".industry-video") && !video.closest(".capabilities"),
 );
 const contentAudioButtons = new Map();
+const capabilityAudioButtons = new Map();
 
 const setAudioButton = (button, video) => {
   if (!button || !video) return;
@@ -940,6 +942,7 @@ const setSoundButton = () => {
 const syncAudioButtons = () => {
   setSoundButton();
   contentVideos.forEach((video) => setAudioButton(contentAudioButtons.get(video), video));
+  capabilityVideos.forEach((video) => setAudioButton(capabilityAudioButtons.get(video), video));
 };
 
 const toggleVideoAudio = async (video) => {
@@ -993,6 +996,17 @@ contentVideos.forEach((video) => {
   setAudioButton(button, video);
 });
 
+capabilityVideos.forEach((video) => {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "media-button icon-only capability-audio-toggle";
+  button.innerHTML = '<span class="media-icon" aria-hidden="true"></span>';
+  button.addEventListener("click", () => toggleVideoAudio(video));
+  video.parentElement?.append(button);
+  capabilityAudioButtons.set(video, button);
+  setAudioButton(button, video);
+});
+
 window.setTimeout(() => {
   const isActuallyPlaying =
     heroVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && heroVideo.currentTime > 0.1;
@@ -1039,7 +1053,6 @@ let expandedCapability = null;
 let capabilityCollapseTimer = 0;
 let capabilityHoverBounds = null;
 let capabilityPointer = null;
-let capabilityAudioCycle = 0;
 
 const isInsideCapabilityTrigger = (event, bounds = capabilityHoverBounds) =>
   bounds &&
@@ -1048,38 +1061,30 @@ const isInsideCapabilityTrigger = (event, bounds = capabilityHoverBounds) =>
   event.clientY >= bounds.top &&
   event.clientY <= bounds.bottom;
 
-const setCapabilityVideoAudio = async (feature, withSound) => {
+const setCapabilityVideoPlayback = async (feature, shouldPlay) => {
   const video = feature?.querySelector(".feature-media video");
   if (!video) return;
 
-  const audioCycle = ++capabilityAudioCycle;
-
-  if (!withSound) {
+  if (!shouldPlay) {
     video.muted = true;
     syncAudioButtons();
     return;
   }
 
-  siteVideos.forEach((otherVideo) => {
-    otherVideo.muted = otherVideo !== video;
-  });
-  video.muted = true;
-
   try {
     await video.play();
-    if (audioCycle === capabilityAudioCycle) video.muted = false;
   } catch {
-    if (audioCycle === capabilityAudioCycle) video.muted = true;
+    video.muted = true;
   }
 
-  if (audioCycle === capabilityAudioCycle) syncAudioButtons();
+  syncAudioButtons();
 };
 
 const resetCapabilityExpansion = (feature) => {
   if (!feature) return;
 
   const media = feature.querySelector(".feature-media");
-  setCapabilityVideoAudio(feature, false);
+  setCapabilityVideoPlayback(feature, false);
   window.clearTimeout(capabilityCollapseTimer);
   feature.classList.remove("is-video-expanded", "is-video-expanded-open");
   media?.style.removeProperty("--capability-video-top");
@@ -1097,7 +1102,7 @@ const resetCapabilityExpansion = (feature) => {
 const collapseCapability = (feature = expandedCapability) => {
   if (!feature?.classList.contains("is-video-expanded-open")) return;
 
-  setCapabilityVideoAudio(feature, false);
+  setCapabilityVideoPlayback(feature, false);
   feature.classList.remove("is-video-expanded-open");
   document.body.classList.remove("capability-video-open");
   window.clearTimeout(capabilityCollapseTimer);
@@ -1110,7 +1115,7 @@ const expandCapability = (feature) => {
   const media = feature.querySelector(".feature-media");
   if (!media) return;
 
-  setCapabilityVideoAudio(feature, true);
+  setCapabilityVideoPlayback(feature, true);
 
   if (expandedCapability && expandedCapability !== feature) {
     resetCapabilityExpansion(expandedCapability);
