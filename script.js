@@ -1,3 +1,11 @@
+const heroVideo = document.querySelector("#reboot-video");
+const hero = document.querySelector(".hero");
+const heroTitle = document.querySelector("#hero-title");
+const soundToggle = document.querySelector("#sound-toggle");
+const PHASE = ["A", "B", "C"].includes(window.SEEDANCE_PHASE) ? window.SEEDANCE_PHASE : "A";
+const WAITLIST_ENDPOINT = window.SEEDANCE_WAITLIST_ENDPOINT?.trim() || "";
+const PLAUSIBLE_SITE_ID = window.SEEDANCE_PLAUSIBLE_SITE_ID?.trim() || "";
+const GA_ID = window.SEEDANCE_GA_ID?.trim() || "";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sourceDocument = "https://holycrab.ai/seedance-2-5/";
 const INBOUND_PARAMS = new URLSearchParams(window.location.search);
