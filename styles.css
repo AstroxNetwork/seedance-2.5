@@ -199,14 +199,17 @@ p {
 }
 
 .nav-logo {
-  width: 148px;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .nav-logo img {
-  width: 100%;
-  height: auto;
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
   filter: brightness(0);
 }
 
@@ -1619,7 +1622,13 @@ h2 em {
   }
 
   .nav-logo {
-    width: 106px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .nav-logo img {
+    width: 36px;
+    height: 36px;
   }
 
   .nav-actions {
