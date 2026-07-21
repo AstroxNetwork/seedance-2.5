@@ -497,7 +497,7 @@ const phaseCopy = {
       navCta: "立即注册",
       heroCta: "立即注册（抢优先体验名额）",
       workflowCta: "预约 Seedance 2.5 优先体验",
-      footerCta: "注册预约优先体验",
+      footerCta: "注册预约优先资格",
     },
     zhHant: {
       title: "Seedance 2.5 即將上線 — 提前註冊享優先體驗 | HolyCrab",
