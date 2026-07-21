@@ -881,10 +881,10 @@ h2 em {
   }
 
   .feature.is-video-expanded.is-video-expanded-open .feature-media {
-    top: 24px;
+    top: 102px;
     left: 32px;
     width: calc(100vw - 64px);
-    height: calc(100svh - 56px);
+    height: calc(100svh - 126px);
     border-radius: 12px;
   }
 
@@ -898,9 +898,71 @@ h2 em {
     transition: opacity 160ms ease;
   }
 
-  body.capability-video-open {
-    overflow: hidden;
+  .feature.is-video-expanded .feature-media > .capability-preview-close {
+    opacity: 1;
+    pointer-events: auto;
   }
+}
+
+.capability-preview-open,
+.capability-preview-close {
+  position: absolute;
+  z-index: 4;
+  width: 46px;
+  height: 46px;
+  display: inline-grid;
+  place-items: center;
+  color: var(--white);
+  background: rgba(10, 18, 15, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.56);
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.capability-preview-open {
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+  transition: opacity 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.feature-media:hover .capability-preview-open,
+.feature-media:focus-within .capability-preview-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.feature.is-video-expanded .capability-preview-open {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.capability-preview-close {
+  top: 16px;
+  right: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease, background 180ms ease;
+}
+
+.capability-preview-open:hover,
+.capability-preview-close:hover {
+  background: rgba(10, 18, 15, 0.72);
+}
+
+.capability-preview-open svg,
+.capability-preview-close svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
 }
 
 .media-caption {
@@ -933,6 +995,13 @@ h2 em {
     top: var(--capability-audio-viewport-top);
     left: var(--capability-audio-viewport-left);
     z-index: 44;
+  }
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 640px) {
+  .capability-preview-open,
+  .capability-preview-close {
+    display: none;
   }
 }
 

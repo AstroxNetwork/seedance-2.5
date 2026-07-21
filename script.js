@@ -1052,8 +1052,6 @@ const capabilityHoverMedia = window.matchMedia("(hover: hover) and (pointer: fin
 const capabilityMobileMedia = window.matchMedia("(max-width: 640px)");
 let expandedCapability = null;
 let capabilityCollapseTimer = 0;
-let capabilityHoverBounds = null;
-let capabilityPointer = null;
 const capabilityAudioPositionFrames = new WeakMap();
 
 const positionCapabilityAudioButton = (feature) => {
@@ -1106,13 +1104,6 @@ const trackCapabilityAudioButton = (feature, duration = 760) => {
   capabilityAudioPositionFrames.set(feature, window.requestAnimationFrame(updatePosition));
 };
 
-const isInsideCapabilityTrigger = (event, bounds = capabilityHoverBounds) =>
-  bounds &&
-  event.clientX >= bounds.left &&
-  event.clientX <= bounds.right &&
-  event.clientY >= bounds.top &&
-  event.clientY <= bounds.bottom;
-
 const setCapabilityVideoPlayback = async (feature, shouldPlay) => {
   const video = feature?.querySelector(".feature-media video");
   if (!video) return;
@@ -1150,7 +1141,6 @@ const resetCapabilityExpansion = (feature, shouldMute = true) => {
 
   if (expandedCapability === feature) {
     expandedCapability = null;
-    capabilityHoverBounds = null;
   }
 
   window.requestAnimationFrame(() => positionCapabilityAudioButton(feature));
@@ -1167,7 +1157,7 @@ const collapseCapability = (feature = expandedCapability) => {
 };
 
 const expandCapability = (feature) => {
-  if (!capabilityHoverMedia.matches || reduceMotion) return;
+  if (!capabilityHoverMedia.matches) return;
 
   const media = feature.querySelector(".feature-media");
   if (!media) return;
@@ -1188,7 +1178,6 @@ const expandCapability = (feature) => {
   const bounds = media.getBoundingClientRect();
   positionCapabilityAudioButton(feature);
   pinCapabilityAudioButton(feature);
-  capabilityHoverBounds = bounds;
   media.style.setProperty("--capability-video-top", `${bounds.top}px`);
   media.style.setProperty("--capability-video-left", `${bounds.left}px`);
   media.style.setProperty("--capability-video-width", `${bounds.width}px`);
@@ -1202,7 +1191,6 @@ const expandCapability = (feature) => {
       if (expandedCapability !== feature) return;
 
       feature.classList.add("is-video-expanded-open");
-      if (!isInsideCapabilityTrigger(capabilityPointer)) collapseCapability(feature);
     });
   });
 };
@@ -1213,18 +1201,45 @@ capabilityFeatures.forEach((feature) => {
 
   positionCapabilityAudioButton(feature);
 
+  const openButton = document.createElement("button");
+  openButton.type = "button";
+  openButton.className = "capability-preview-open";
+  openButton.setAttribute("aria-label", "放大视频预览");
+  openButton.title = "放大视频预览";
+  openButton.innerHTML = `
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="11" cy="11" r="6"></circle>
+      <path d="m20 20-4.2-4.2"></path>
+    </svg>`;
+  openButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    expandCapability(feature);
+  });
+
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "capability-preview-close";
+  closeButton.setAttribute("aria-label", "关闭视频预览");
+  closeButton.title = "关闭视频预览";
+  closeButton.innerHTML = `
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m6 6 12 12M18 6 6 18"></path>
+    </svg>`;
+  closeButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    collapseCapability(feature);
+  });
+
+  media.append(openButton, closeButton);
+
   media.addEventListener("transitionrun", (event) => {
     if (event.propertyName === "transform") trackCapabilityAudioButton(feature);
   });
   media.addEventListener("transitionend", (event) => {
     if (event.propertyName === "transform") positionCapabilityAudioButton(feature);
   });
-
-  media.addEventListener("pointerenter", (event) => {
-    capabilityPointer = event;
-    expandCapability(feature);
-  });
-  media.addEventListener("pointerleave", () => collapseCapability(feature));
 });
 
 if ("ResizeObserver" in window) {
@@ -1245,19 +1260,9 @@ capabilityMobileMedia.addEventListener("change", () => {
 });
 
 window.addEventListener(
-  "pointermove",
+  "wheel",
   (event) => {
-    capabilityPointer = event;
-    if (!expandedCapability || !capabilityHoverBounds) return;
-
-    if (isInsideCapabilityTrigger(event)) {
-      if (!expandedCapability.classList.contains("is-video-expanded-open")) {
-        expandCapability(expandedCapability);
-      }
-      return;
-    }
-
-    collapseCapability(expandedCapability);
+    if (event.deltaY > 0) collapseCapability();
   },
   { passive: true },
 );
