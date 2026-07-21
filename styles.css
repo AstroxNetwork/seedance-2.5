@@ -120,14 +120,13 @@ p {
   gap: 24px;
   color: var(--ink);
   background: rgb(255 255 255 / var(--nav-background-opacity));
-  border: 1px solid rgba(255, 255, 255, 0.34);
-  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
   box-shadow:
-    0 8px 32px rgba(5, 18, 13, 0.2),
-    0 2px 16px rgba(5, 18, 13, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.48),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 0 18px rgba(255, 255, 255, 0.09);
+    0 8px 32px 0 rgba(31, 38, 135, 0.2),
+    0 2px 16px 0 rgba(31, 38, 135, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.2);
   -webkit-backdrop-filter: blur(12px) saturate(1.8) brightness(1.1);
   backdrop-filter: blur(12px) saturate(1.8) brightness(1.1);
   transform: translateX(-50%);
@@ -893,7 +892,7 @@ h2 em {
     border-color: transparent;
   }
 
-  .feature.is-video-expanded .feature-media > :not(video) {
+  .feature.is-video-expanded .feature-media > :not(video):not(.capability-audio-toggle):not(.capability-preview-close) {
     opacity: 0;
     transition: opacity 160ms ease;
   }
@@ -922,10 +921,10 @@ h2 em {
 }
 
 .capability-preview-open {
-  top: 50%;
-  left: 50%;
+  right: 68px;
+  bottom: 15px;
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.9);
+  transform: translateY(4px) scale(0.9);
   transition: opacity 180ms ease, transform 180ms ease, background 180ms ease;
 }
 
@@ -933,7 +932,7 @@ h2 em {
 .feature-media:focus-within .capability-preview-open {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translateY(0) scale(1);
 }
 
 .feature.is-video-expanded .capability-preview-open {
@@ -967,7 +966,7 @@ h2 em {
 
 .media-caption {
   position: absolute;
-  right: 16px;
+  right: 124px;
   bottom: 14px;
   left: 16px;
   color: var(--white);
@@ -979,23 +978,9 @@ h2 em {
 
 .capability-audio-toggle {
   position: absolute;
-  top: var(--capability-audio-local-top, 0);
-  left: var(--capability-audio-local-left, 0);
+  right: 16px;
+  bottom: 16px;
   z-index: 5;
-  visibility: hidden;
-}
-
-.capability-audio-toggle.is-positioned {
-  visibility: visible;
-}
-
-@media (hover: hover) and (pointer: fine) and (min-width: 641px) {
-  .feature.is-video-expanded .capability-audio-toggle {
-    position: fixed;
-    top: var(--capability-audio-viewport-top);
-    left: var(--capability-audio-viewport-left);
-    z-index: 44;
-  }
 }
 
 @media (hover: none), (pointer: coarse), (max-width: 640px) {
@@ -1548,6 +1533,16 @@ h2 em {
 
 .waitlist-status[data-state="error"] {
   color: #fff2c9;
+}
+
+@media (min-width: 981px) {
+  .closing-actions {
+    align-self: start;
+  }
+
+  .waitlist-notify {
+    padding-top: 3px;
+  }
 }
 
 .primary-button {

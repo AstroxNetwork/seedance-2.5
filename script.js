@@ -9,6 +9,18 @@ const GA_ID = window.SEEDANCE_GA_ID?.trim() || "";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sourceDocument = "https://holycrab.ai/seedance-2-5/";
 const INBOUND_PARAMS = new URLSearchParams(window.location.search);
+const LANGUAGE_LOCALES = { zh: "zh-CN", zhHant: "zh-TW", en: "en-US", ja: "ja-JP" };
+const LANGUAGE_URL_CODES = { zh: "zh", zhHant: "zh-TW", en: "en", ja: "ja" };
+const LOCALE_LANGUAGES = Object.fromEntries(
+  Object.entries(LANGUAGE_LOCALES).map(([language, locale]) => [locale.toLowerCase(), language]),
+);
+const URL_CODE_LANGUAGES = Object.fromEntries(
+  Object.entries(LANGUAGE_URL_CODES).map(([language, code]) => [code.toLowerCase(), language]),
+);
+const normaliseLanguageParam = (value) => value?.replace("_", "-").toLowerCase();
+const languageFromQuery =
+  URL_CODE_LANGUAGES[normaliseLanguageParam(INBOUND_PARAMS.get("lang"))] ||
+  LOCALE_LANGUAGES[normaliseLanguageParam(INBOUND_PARAMS.get("locale"))];
 const INBOUND_UTM = Object.fromEntries(
   ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
     .map((key) => [key, INBOUND_PARAMS.get(key)])
@@ -96,10 +108,10 @@ const supportsNavRefraction = (() => {
 document.documentElement.classList.toggle("supports-nav-refraction", supportsNavRefraction);
 
 const navGlassSettings = {
-  borderRadius: 50,
+  borderRadius: 20,
   borderWidth: 0.07,
-  backgroundOpacity: 0.25,
-  brightness: 50,
+  backgroundOpacity: 0,
+  brightness: 70,
   opacity: 0.93,
   blur: 11,
   displace: 0.5,
@@ -110,7 +122,10 @@ const navGlassSettings = {
 };
 
 const navSurface = document.querySelector(".site-nav");
-navSurface?.style.setProperty("--nav-background-opacity", navGlassSettings.backgroundOpacity);
+navSurface?.style.setProperty(
+  "--nav-background-opacity",
+  supportsNavRefraction ? navGlassSettings.backgroundOpacity : 0.25,
+);
 const navGlassMap = document.querySelector("#nav-glass-map");
 const navGlassBlur = document.querySelector("#nav-glass-blur");
 const navDisplacementChannels = [
@@ -223,7 +238,7 @@ const translations = {
     navTry: "前往嘗試",
     heroSubtitle: "提前註冊帳號，上線優先體驗！",
     factDuration: "單段直出",
-    factAssets: "個參考素材",
+    factAssets: "參考素材數量上限",
     factLanguagesValue: "多語言",
     factLanguages: "理解與表達",
     explore: "查看詳情",
@@ -495,7 +510,7 @@ const phaseCopy = {
       heroTitle: "Seedance 2.5<br />即将上线",
       heroNotice: "",
       navCta: "立即注册",
-      heroCta: "立即注册（抢优先体验名额）",
+      heroCta: "立即注册",
       workflowCta: "预约 Seedance 2.5 优先体验",
       footerCta: "注册预约优先资格",
     },
@@ -999,10 +1014,10 @@ contentVideos.forEach((video) => {
 capabilityVideos.forEach((video) => {
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "media-button icon-only capability-audio-toggle";
+  button.className = "media-button icon-only video-sound-toggle capability-audio-toggle";
   button.innerHTML = '<span class="media-icon" aria-hidden="true"></span>';
   button.addEventListener("click", () => toggleVideoAudio(video));
-  video.closest(".feature")?.append(button);
+  video.parentElement?.append(button);
   capabilityAudioButtons.set(video, button);
   setAudioButton(button, video);
 });
@@ -1049,60 +1064,8 @@ document.querySelectorAll(".feature-media video").forEach((video) => {
 
 const capabilityFeatures = Array.from(document.querySelectorAll(".capabilities .feature"));
 const capabilityHoverMedia = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 641px)");
-const capabilityMobileMedia = window.matchMedia("(max-width: 640px)");
 let expandedCapability = null;
 let capabilityCollapseTimer = 0;
-const capabilityAudioPositionFrames = new WeakMap();
-
-const positionCapabilityAudioButton = (feature) => {
-  if (!feature || feature.classList.contains("is-video-expanded")) return;
-
-  const media = feature.querySelector(".feature-media");
-  const button = feature.querySelector(".capability-audio-toggle");
-  if (!media || !button) return;
-
-  const mediaBounds = media.getBoundingClientRect();
-  const buttonBounds = button.getBoundingClientRect();
-  const buttonStyles = getComputedStyle(button);
-  const containingBlockLeft = buttonBounds.left - (Number.parseFloat(buttonStyles.left) || 0);
-  const containingBlockTop = buttonBounds.top - (Number.parseFloat(buttonStyles.top) || 0);
-  const targetLeft = capabilityMobileMedia.matches
-    ? mediaBounds.right - buttonBounds.width - 12
-    : mediaBounds.left;
-  const targetTop = capabilityMobileMedia.matches
-    ? mediaBounds.bottom - buttonBounds.height - 12
-    : mediaBounds.bottom + 10;
-  button.style.setProperty("--capability-audio-local-left", `${targetLeft - containingBlockLeft}px`);
-  button.style.setProperty("--capability-audio-local-top", `${targetTop - containingBlockTop}px`);
-  button.classList.add("is-positioned");
-};
-
-const pinCapabilityAudioButton = (feature) => {
-  const button = feature?.querySelector(".capability-audio-toggle");
-  if (!button) return;
-
-  const bounds = button.getBoundingClientRect();
-  button.style.setProperty("--capability-audio-viewport-left", `${bounds.left}px`);
-  button.style.setProperty("--capability-audio-viewport-top", `${bounds.top}px`);
-};
-
-const trackCapabilityAudioButton = (feature, duration = 760) => {
-  const previousFrame = capabilityAudioPositionFrames.get(feature);
-  if (previousFrame) window.cancelAnimationFrame(previousFrame);
-
-  const startedAt = window.performance.now();
-  const updatePosition = (timestamp) => {
-    positionCapabilityAudioButton(feature);
-    if (timestamp - startedAt >= duration) {
-      capabilityAudioPositionFrames.delete(feature);
-      return;
-    }
-
-    capabilityAudioPositionFrames.set(feature, window.requestAnimationFrame(updatePosition));
-  };
-
-  capabilityAudioPositionFrames.set(feature, window.requestAnimationFrame(updatePosition));
-};
 
 const setCapabilityVideoPlayback = async (feature, shouldPlay) => {
   const video = feature?.querySelector(".feature-media video");
@@ -1127,7 +1090,6 @@ const resetCapabilityExpansion = (feature, shouldMute = true) => {
   if (!feature) return;
 
   const media = feature.querySelector(".feature-media");
-  const button = feature.querySelector(".capability-audio-toggle");
   if (shouldMute) setCapabilityVideoPlayback(feature, false);
   window.clearTimeout(capabilityCollapseTimer);
   feature.classList.remove("is-video-expanded", "is-video-expanded-open");
@@ -1135,15 +1097,11 @@ const resetCapabilityExpansion = (feature, shouldMute = true) => {
   media?.style.removeProperty("--capability-video-left");
   media?.style.removeProperty("--capability-video-width");
   media?.style.removeProperty("--capability-video-height");
-  button?.style.removeProperty("--capability-audio-viewport-left");
-  button?.style.removeProperty("--capability-audio-viewport-top");
   document.body.classList.remove("capability-video-open");
 
   if (expandedCapability === feature) {
     expandedCapability = null;
   }
-
-  window.requestAnimationFrame(() => positionCapabilityAudioButton(feature));
 };
 
 const collapseCapability = (feature = expandedCapability) => {
@@ -1176,8 +1134,6 @@ const expandCapability = (feature) => {
   }
 
   const bounds = media.getBoundingClientRect();
-  positionCapabilityAudioButton(feature);
-  pinCapabilityAudioButton(feature);
   media.style.setProperty("--capability-video-top", `${bounds.top}px`);
   media.style.setProperty("--capability-video-left", `${bounds.left}px`);
   media.style.setProperty("--capability-video-width", `${bounds.width}px`);
@@ -1198,8 +1154,6 @@ const expandCapability = (feature) => {
 capabilityFeatures.forEach((feature) => {
   const media = feature.querySelector(".feature-media");
   if (!media) return;
-
-  positionCapabilityAudioButton(feature);
 
   const openButton = document.createElement("button");
   openButton.type = "button";
@@ -1233,30 +1187,6 @@ capabilityFeatures.forEach((feature) => {
   });
 
   media.append(openButton, closeButton);
-
-  media.addEventListener("transitionrun", (event) => {
-    if (event.propertyName === "transform") trackCapabilityAudioButton(feature);
-  });
-  media.addEventListener("transitionend", (event) => {
-    if (event.propertyName === "transform") positionCapabilityAudioButton(feature);
-  });
-});
-
-if ("ResizeObserver" in window) {
-  const capabilityLayoutObserver = new ResizeObserver((entries) => {
-    entries.forEach(({ target }) => positionCapabilityAudioButton(target));
-  });
-  capabilityFeatures.forEach((feature) => capabilityLayoutObserver.observe(feature));
-} else {
-  window.addEventListener(
-    "resize",
-    () => capabilityFeatures.forEach((feature) => positionCapabilityAudioButton(feature)),
-    { passive: true },
-  );
-}
-
-capabilityMobileMedia.addEventListener("change", () => {
-  capabilityFeatures.forEach((feature) => positionCapabilityAudioButton(feature));
 });
 
 window.addEventListener(
@@ -1272,22 +1202,22 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") collapseCapability();
 });
 
-const ambientVideos = document.querySelectorAll(".industry-video video, .workflow-video video");
-const ambientVideoObserver = new IntersectionObserver(
+const nonHeroVideos = siteVideos.filter((video) => video !== heroVideo);
+const videoPlaybackObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       const video = entry.target;
-      if (entry.isIntersecting) {
+      if (entry.intersectionRatio >= 0.5) {
         video.play().catch(() => {});
       } else {
         video.pause();
       }
     });
   },
-  { threshold: 0.25 },
+  { threshold: 0.5 },
 );
 
-ambientVideos.forEach((video) => ambientVideoObserver.observe(video));
+nonHeroVideos.forEach((video) => videoPlaybackObserver.observe(video));
 
 const audioVisibilityObserver = new IntersectionObserver(
   (entries) => {
@@ -1323,6 +1253,18 @@ const setLanguageMenu = (isOpen) => {
   languageOptions.hidden = !isOpen;
 };
 
+const syncLanguageUrl = (language) => {
+  const code = LANGUAGE_URL_CODES[language];
+  if (!code || !window.history.replaceState) return;
+
+  const url = new URL(window.location.href);
+  if (url.searchParams.get("lang") === code && !url.searchParams.has("locale")) return;
+
+  url.searchParams.set("lang", code);
+  url.searchParams.delete("locale");
+  window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+};
+
 const applyLanguage = (language) => {
   currentLanguage = language;
   const dictionary = translations[language] || {};
@@ -1341,7 +1283,7 @@ const applyLanguage = (language) => {
     }
   });
 
-  document.documentElement.lang = { zh: "zh-CN", zhHant: "zh-Hant", en: "en", ja: "ja" }[language];
+  document.documentElement.lang = LANGUAGE_LOCALES[language];
   applyPhase(language);
 
   languageButtons.forEach((button) => {
@@ -1356,6 +1298,8 @@ const applyLanguage = (language) => {
   } catch {
     // Language preference persistence is optional.
   }
+
+  syncLanguageUrl(language);
 };
 
 languageButtons.forEach((button) => {
@@ -1379,12 +1323,14 @@ document.addEventListener("keydown", (event) => {
   languageTrigger.focus();
 });
 
-let savedLanguage = "zh";
-try {
-  const storedLanguage = window.localStorage.getItem("seedance-language");
-  if (["zh", "zhHant", "en", "ja"].includes(storedLanguage)) savedLanguage = storedLanguage;
-} catch {
-  // Continue with Chinese when storage is unavailable.
+let savedLanguage = languageFromQuery || "zh";
+if (!languageFromQuery) {
+  try {
+    const storedLanguage = window.localStorage.getItem("seedance-language");
+    if (LANGUAGE_LOCALES[storedLanguage]) savedLanguage = storedLanguage;
+  } catch {
+    // Continue with Chinese when storage is unavailable.
+  }
 }
 applyLanguage(savedLanguage);
 
